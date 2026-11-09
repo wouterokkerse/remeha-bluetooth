@@ -5,7 +5,7 @@
     "step": {
       "user": {
         "title": "Select your Elga Ace gateway",
-        "description": "Activate Bluetooth/service mode on the appliance and close the Remeha app. Select the gateway discovered by your local Home Assistant Bluetooth adapter.",
+        "description": "Activate Bluetooth/service mode on the appliance and close the Remeha app. Select the gateway discovered by a local adapter or an active ESPHome Bluetooth proxy.",
         "data": {"address": "Bluetooth gateway"}
       },
       "pair": {
@@ -24,16 +24,16 @@
       "invalid_name": "Enter a device name between 1 and 80 characters.",
       "invalid_pin": "Enter a numeric Bluetooth passkey containing one to six digits.",
       "invalid_auth": "Bluetooth rejected the pairing code. Check the code on the appliance. After an incorrect code the gateway may need about a minute before another attempt.",
-      "cannot_connect": "Unable to connect. Activate Bluetooth/service mode, move the local adapter within range and close the Remeha app and the standalone reader.",
+      "cannot_connect": "Unable to connect. Activate Bluetooth/service mode, check the adapter or proxy is within range with a free active connection slot, and close the Remeha app and standalone reader.",
       "cannot_read": "Connected, but an authenticated register could not be read. Check that this is an Elga Ace EHC-07 gateway and try again.",
       "handshake_failed": "The gateway did not accept the BLE/CAN/appliance handshake. Keep service mode active and check the Home Assistant logs.",
-      "local_adapter_required": "Passkey pairing requires a local Linux/BlueZ Bluetooth adapter with D-Bus access. ESPHome Bluetooth proxies are not supported by this version.",
+      "proxy_pairing_required": "Install the supplied elga-pairing-package.yaml and companion component on the selected ESPHome proxy, enable native API encryption, flash it and reconnect it to Home Assistant. Stock proxy firmware does not forward the pairing code. See esphome/README.md.",
+      "unsupported_adapter": "This Bluetooth transport cannot pair with a passkey. Use local Linux/BlueZ or an ESP32 ESPHome proxy with current firmware and the supplied pairing helper.",
       "unknown": "An unexpected error occurred. Check the Home Assistant logs."
     },
     "abort": {
       "already_configured": "This Bluetooth gateway is already configured.",
-      "no_devices_found": "No unconfigured GTW/EHC gateways were found. Enable Bluetooth/service mode, check your local Bluetooth adapter and start setup again.",
-      "local_adapter_required": "The gateway is only visible through a remote adapter. This version needs a local Linux/BlueZ Bluetooth adapter for pairing with a code.",
+      "no_devices_found": "No unconfigured connectable GTW/EHC gateways were found. Enable Bluetooth/service mode, check your local adapter or active ESPHome proxy and start setup again.",
       "not_supported": "This is not a supported connectable GTW/EHC gateway.",
       "reauth_successful": "The pairing code was updated. The integration is reconnecting."
     }

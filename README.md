@@ -14,12 +14,13 @@ test. No live Bluetooth tests are performed by the development tools.**
   with the built-in Bluetooth integration configured. The integration follows
   the Home Assistant 2026.11 Bluetooth APIs. The schema importer includes a
   Voluptuous fallback, but older Home Assistant releases are not a tested target.
-- A **local** Bluetooth adapter within range of the gateway. **ESPHome Bluetooth
-  proxies are not supported in this version:** the numeric passkey is supplied
-  through a temporary local BlueZ D-Bus agent. Merely discovering a device via a
-  proxy is not sufficient for this pairing implementation.
-- Access from Home Assistant to the system D-Bus/BlueZ service. Container users
-  must expose the host's system D-Bus socket and Bluetooth adapter correctly.
+- Either a local Linux/BlueZ Bluetooth adapter or an **active ESP32 ESPHome
+  Bluetooth proxy** within range of the gateway. Proxy passkey support requires
+  the supplied companion firmware package and native API encryption; stock
+  proxy firmware does not forward a setup PIN. See [proxy setup](esphome/README.md).
+- For local adapters only: access from Home Assistant to system D-Bus/BlueZ.
+  Container users must expose that socket and adapter correctly. Proxy-only
+  installations do not need a local Bluetooth adapter or local pairing agent.
 - Bluetooth/service mode active on the appliance. Close the Remeha app and the
   standalone reader before connecting; they must not compete for the gateway.
 - The device catalog was extracted for **EHC-07, OBD 1.51**. Other firmware or
@@ -39,11 +40,27 @@ test. No live Bluetooth tests are performed by the development tools.**
 6. Wait for pairing, BLE unlock, CAN authorization, appliance authorization and
    the verification read to finish.
 
-The code is used for real BlueZ authentication, not just stored in a form. A
-previously bonded adapter reuses its existing Bluetooth bond. The agent is
-scoped to the selected device and the pairing operation; it never replaces the
-system default agent. A wrong PIN can temporarily lock the gateway, so wait
-about a minute before retrying if needed.
+The code is used for real Bluetooth authentication, not just stored in a form.
+Local connections use a device-scoped BlueZ agent without replacing the system
+default agent. Proxy connections deliver the code to the selected proxy's
+companion handler over its encrypted native API. Existing bonds are reused.
+A wrong PIN can temporarily lock the gateway, so wait about a minute before
+retrying if needed.
+
+### Bluetooth proxies
+
+Version **0.2.0** supports active ESP32 ESPHome proxies without a local Bluetooth
+adapter. First install the small firmware package described in
+[`esphome/README.md`](esphome/README.md), then use the same device-selection,
+name and pairing-code wizard. All 487 entities remain read-only.
+
+The standard proxy pairing API has no passkey argument. The companion package
+is therefore required for this PIN-protected gateway; the integration does not
+pretend that `pair(pin=...)` would work on unchanged stock firmware. Missing
+helper firmware, disabled API encryption or unsupported pairing produces a
+specific setup error. Install the helper on every proxy that HA may select for
+the gateway. The release ZIP includes the ESPHome sources and example YAML, but
+does not flash hardware automatically.
 
 To build an installable archive, run `python tools/build_release.py`. Extract
 `dist/remeha-elga-ace-bluetooth.zip` into `/config` so that `custom_components`
@@ -128,8 +145,10 @@ Protect Home Assistant configuration files and backups accordingly.
 
 - **No gateways listed:** enable service/Bluetooth mode, close the app, check
   that the gateway is visible to a local adapter and retry the setup dialog.
-- **Local adapter required:** this version cannot deliver passkeys through a
-  remote Bluetooth proxy. Use an in-range local USB/on-board adapter.
+- **Proxy pairing helper required:** install `esphome/elga-pairing-package.yaml`
+  and its component on the actual selected proxy, enable native API encryption,
+  flash it and reload its ESPHome integration. Merely seeing advertisements
+  through a proxy is not sufficient: it must support active GATT connections.
 - **Pairing rejected:** check every PIN digit, including leading zeroes, and
   wait out the gateway's temporary lockout. An existing bond is not deleted
   automatically. Remove stale bonds using your host's Bluetooth tools only if
