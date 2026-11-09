@@ -28,6 +28,28 @@ test. No live Bluetooth tests are performed by the development tools.**
 
 ## Installation
 
+### Marketplace / HACS
+
+1. Add `https://github.com/wouterokkerse/remeha-bluetooth` as a custom repository
+   in Marketplace/HACS, choosing **Integration** if asked for a repository type.
+2. Download **Remeha Elga Ace Bluetooth** and restart Home Assistant.
+3. Open **Settings > Devices & services > Add integration** and select
+   **Remeha Elga Ace Bluetooth**.
+4. Select your gateway, enter its pairing code, and choose a device name.
+
+Marketplace/HACS installs `custom_components/elga_ace` directly from the selected
+GitHub version. No release ZIP asset is required. It does **not** install or
+flash the separate ESPHome firmware package: proxy users must also follow
+[`esphome/README.md`](https://github.com/wouterokkerse/remeha-bluetooth/blob/main/esphome/README.md).
+
+If you see **"no hacs.json in its root"**, the version being installed must
+include the root `hacs.json`. Push the updated files to GitHub and select the
+updated default branch, or publish a new release from that commit. Updating
+`main` does not fix an already-published older release tag. Version **0.2.1**
+includes the HACS metadata fix.
+
+### Manual installation
+
 1. Copy `custom_components/elga_ace` into your Home Assistant configuration
    directory. The resulting path must be
    `/config/custom_components/elga_ace/manifest.json`.
@@ -202,7 +224,15 @@ included in the integration or its release archive.
 
 This is an unofficial integration, not affiliated with or supported by Remeha.
 
-The repository is currently local-only. The manifest intentionally has no
-fabricated documentation/issue-tracker URL. Before publishing through HACS or
-running its full metadata checks, add the real repository README URL as
-`documentation` and the real issue tracker as `issue_tracker` in `manifest.json`.
+## Publishing updates
+
+Commit and push the repository files, including `hacs.json` and the integration
+manifest, to `wouterokkerse/remeha-bluetooth`. The integration stays in
+`custom_components/elga_ace`; keep `content_in_root` and `zip_release` disabled.
+The manually built ZIP is a `/config` bundle, not a HACS ZIP-release asset.
+
+For a versioned update, publish a GitHub release from the updated commit with a
+tag matching the integration manifest version, for example `v0.2.1`. The tagged
+tree must also include `hacs.json`. Users can install the default branch without
+a release. Adding a custom repository does not automatically list the integration
+in the public Marketplace/HACS catalog.
