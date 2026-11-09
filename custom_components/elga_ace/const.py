@@ -1,0 +1,33 @@
+"""Constants for the read-only Elga Ace Bluetooth integration."""
+
+DOMAIN = "elga_ace"
+DEFAULT_NAME = "Elga Ace"
+CONF_PIN = "pin"
+CONF_SLOW_BATCH_SIZE = "slow_batch_size"
+DEFAULT_SCAN_INTERVAL = 30
+DEFAULT_SLOW_BATCH_SIZE = 20
+POLL_BUDGET = 15.0
+REGISTER_TIMEOUT = 2.0
+REGISTER_RETRY_DELAY = 600.0
+SLOW_REFRESH_INTERVAL = 600.0
+
+CHAR_WRITE = "496b1b03-cebc-4d59-9c32-14ea88c266f9"
+CHAR_NOTIFY = "ab9af948-fb86-492d-820d-bdea2dcb7ecf"
+CHAR_ERROR = "cff32957-5279-4075-bf3d-8e583d418c0d"
+CHAR_IDENTIFICATION_WRITE = "94e54dc4-f69a-4c0c-8a6f-cc8f3135c665"
+CHAR_IDENTIFICATION_NOTIFY = "69092300-a182-4fea-803b-24ada406da8a"
+CHAR_UNLOCK_WRITE = "f1ca5aeb-02cd-44a8-972b-44b6e7250d0b"
+CHAR_UNLOCK_NOTIFY = "e2c47825-6dff-4d79-b74a-5bdc4f4661cf"
+
+FAST_REGISTERS = (
+    (0x5031, 0),
+    (0x4359, 0),
+    (0x501E, 0),
+    (0x4350, 0),
+    (0x50A9, 0),
+    (0x434D, 0),
+    (0x434E, 0),
+    (0x5404, 1),
+    (0x5013, 0),
+    (0x5302, 0),
+)

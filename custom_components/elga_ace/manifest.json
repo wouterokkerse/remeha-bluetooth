@@ -1,0 +1,15 @@
+{
+  "domain": "elga_ace",
+  "name": "Remeha Elga Ace Bluetooth",
+  "bluetooth": [
+    {"local_name": "GTW*", "connectable": true},
+    {"local_name": "EHC-*", "connectable": true}
+  ],
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["bluetooth"],
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "requirements": ["bleak-retry-connector==4.7.1"],
+  "version": "0.1.0"
+}

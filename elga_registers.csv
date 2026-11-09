@@ -1,0 +1,581 @@
+﻿section;index_hex;index_decimal;subindex;code;name;description;datatype;expression;format;unit_id;minimum;maximum;step;selection;read_level;write_level
+sample;0x4301;17153;0;HM001;varHpHeatPumpTF;Heat pump flow temperature after condenser;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+sample;0x4302;17154;0;HM002;varHpHeatPumpTR;Heat pump return temperature after condenser.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+sample;0x4303;17155;0;HM003;varHpHeatPumpSetpoint;System flow temperature setpoint including backups;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+sample;0x4306;17158;0;HM006;varHpHumiditySensor;Relative humidity measured by the humidity sensor;int16;sgn(A.0 + B.1) x 1;0;31014;0;100;1;;1;1
+sample;0x4310;17168;0;HM016;varHpElecEnergyMeter;Electric energy meter;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;1;1
+sample;0x431F;17183;0;HM031;varHpCOPCalculated;Instantaneous COP calculated by Hybrid application;uint16;(A.0 + B.1) x 0.001;0.000;;0;1;0.001;;3;3
+sample;0x4320;17184;0;HM032;varHpCOPThreshold;COP threshold calculated by Hybrid;uint16;(A.0 + B.1) x 0.001;0.000;;0;1;0.001;;3;3
+sample;0x4321;17185;0;HM033;varHpCoolingSetpoint;Flow temperature setpoint in cooling mode;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;40;0.01;;1;1
+sample;0x4322;17186;0;HM034;varHpBackupPcuFlowTemp;Heat pump boiler backup pcu flow temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;4;4
+sample;0x4325;17189;0;HM037;varHpBackupPcuInternalSetpoint;Heat pump boiler backup pcu internal temperature setpoint;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+sample;0x4326;17190;0;HM038;varHpBackupPcuStatus;Heat pump boiler backup pcu status;uint8;(A) x 1;0;;0;250;1;;4;4
+sample;0x4329;17193;0;HM041;varHpBackupPcuLocking;Heat pump boiler backup pcu Locking;uint8;(A) x 1;0;;0;255;1;;4;4
+sample;0x432A;17194;0;HM042;varHpBackupPcuBLocking;Heat pump boiler backup pcu Blocking;uint8;(A) x 1;0;;0;255;1;;4;4
+sample;0x4333;17203;0;HM051;varHpBackupPcuPressure;Heat pump boiler backup pcu pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;4;4
+sample;0x4337;17207;0;HM054;varHpTimeBetweenStage;Heat Pump temporisation timer before activating next generator stage;uint16;(A.0 + B.1) x 1;0;31004;0;65535;1;;1;1
+sample;0x4338;17208;0;HM056;varHpTempoBetweenStageCalculated;Heat pump calculated temporisation before activating next back up stage;uint16;(A.0 + B.1) x 1;0;31004;0;65535;1;;1;1
+sample;0x4339;17209;0;HM057;varHpNbStageAvailable;Heat pump number of generator stage available;uint8;(A) x 1;0;;0;255;1;;1;1
+sample;0x433A;17210;0;HM058;varHpNbStageRequired;heat pump number of generator stages required;uint8;(A) x 1;0;;0;255;1;;1;1
+sample;0x434B;17227;0;;varHpOutdoorUnitModulationLevel;Control the modulation level of the outdoor unit. The different modulation levels are mapped to values between 64-254 for heating, and between 64-224 in cooling mode. The values correspond to compressor speeds, the relation between this value and the compressor speed is described in: XXX;uint8;(A) x 1;0;;0;255;1;;4;4
+sample;0x434C;17228;0;;varHpOutdoorUnitErrorCode;Alarm codes when there is an alarm condition;int16;sgn(A.0 + B.1) x 1;0;;-4;32767;1;;3;3
+sample;0x4353;17235;0;;varHpCompressorFrequency;The current actual compressor speed measured in Hz. The actual minimum and maximum values are different depending on the ODU.;uint8;(A) x 1;0;31028;0;255;1;;3;3
+sample;0x4354;17236;0;;varHpOutdootUnitFanSpeed;Current speed of the fan of the ODU, this value varies based on the ODU and the outdoor conditions;uint16;(A.0 + B.1) x 1;0;31009;0;810;1;;4;4
+sample;0x4355;17237;0;;varHpOutdoorUnitElectronicValvePosition;This register depicts the position of the Pulse Motor Valve (PMV) of the electronic expansion valve. The EEV is controlled independantly by the ODU.;uint16;(A.0 + B.1) x 1;0;31016;0;810;1;;3;4
+sample;0x4356;17238;0;;varHpOutdoorUnitProtectFunction;"This register shows the active protect functions, if active these protect functions may prevent the ODU running at the requested speed. When protect functions are active for too long the ODU may be switched off. 
+Current protection: Active when current draw is too high, the maximum depends on the type of ODU.
+TD protection: Active when the discharge temperature is too high, the maximum depends on the type of ODU.
+TC protection: Active when the condenser temperature is too high, the maximum depends on the type of ODU.";uint8;(A) x 1;0;;0;255;1;;3;3
+sample;0x500C;20492;0;AM010;varApPumpSpeed;Current pump speed;uint16;(A.0 + B.1) x 0.1;0.0;31014;0;100;0.10000000000000001;;2;2
+sample;0x500F;20495;0;AM012;varApStatus;Status of appliance;uint8;A;0;;0;254;;DeviceState;1;1
+sample;0x5011;20497;0;AM014;varApSubStatus;Sub Status of appliance;uint8;A;0;;0;255;;DeviceSubStatus;1;1
+sample;0x5013;20499;0;AM016;varApTflow;Flow temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+sample;0x5016;20502;0;AM019;varApWaterPressure;actual Water pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;1;1
+sample;0x501E;20510;0;AM027;varApTOutside;Outside temperature measure;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+sample;0x5031;20529;0;AM040;varApControlTemp;Current Temp used for control;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;1;1
+sample;0x505B;20571;0;AM047;varApActualProducerPower;Signal used to capture actual power calculation. .;uint32;(A.0 + B.1 + C.2 + D.3) x 0.001;0.000;31019;0;4294967.2939999998;0.001;;3;3
+sample;0x5083;20611;0;AM056;varApFlowmeter;Flow rate;uint16;(A.0 + B.1) x 0.01;0.00;31013;0;655.35000000000002;0.01;;1;1
+sample;0x50A1;20641;0;;varApPowerActualU8;Actual relative power produced for PDO output;uint8;(A) x 1;0;31014;0;100;1;;3;3
+sample;0x50A2;20642;0;;varApToutsideAverageShortWindow;3 minute average of outside sensor temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;2;2
+sample;0x50A3;20643;0;;varApToutsideAverageLongWindow;2 hour average of outside sensor temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;3;3
+sample;0x50A7;20647;0;AM091;varApSeasonMode;Seasonal mode active (summer /  winter);uint8;A;0;;0;3;;SeasonMode;1;1
+sample;0x50A9;20649;0;AM101;varApInternalSetpoint;Internal setpoint used for hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+sample;0x5302;21250;0;PM002;varChSetpoint;Central heating setpoint of the appliance;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+sample;0x5404;21508;1;CM030;varZoneTRoom;Current room temperature for zone;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;50;0.10000000000000001;;1;1
+sample;0x5408;21512;1;CM070;varZoneTemperatureSetpoint;Current flow temperature setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;2;2
+sample;0x5419;21529;1;CM190;varZoneTRoomSetpoint;Current room temperature  setpoint requested;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;60;0.10000000000000001;;1;1
+sample;0x5601;22017;0;DM001;varDhwTankTemperature;Tank temperature DHW tank (bottom sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;4;4
+sample;0x5606;22022;0;DM006;varDhwTankTemperatureTop;Tank temperature DHW tank (Top sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;4;4
+parameter;0x200E;8206;0;;parApLocale;Location enumerator following the ISO3166-1. Written by MK3+ or RU indicates which country the unit resides in.;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;2;2
+parameter;0x2014;8212;1;AP111;parComBusLength;Parameter setting the bus length based on distance;uint8;A;0;;0;2;;busLength;5;5
+parameter;0x2014;8212;2;AP112;parComBusLength;Parameter setting the bus length based on distance;uint8;A;0;;0;2;;busLength;5;5
+parameter;0x2300;8960;0;HP000;parHpOutdoorBivalentTemperature;Outside temperature level above which the backup operation is blocked for a standard heating mode.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-10;20;0.5;;2;2
+parameter;0x2302;8962;0;HP002;parHpMaxTemp;Maximum flow temperature authorized on the outlet of the condenser. If the temperature  becomes higher then the compressor is switched off.;uint16;(A.0 + B.1) x 0.01;0.00;31001;20;60;1;;4;4
+parameter;0x2303;8963;0;HP003;parHpMinCoolingTemp;Minimum flow temperature authorized on the outlet of the condenser in cooling mode. If the temperature  becomes lower then the compressor is switched off.;uint16;(A.0 + B.1) x 0.01;0.00;31001;15;30;1;;3;3
+parameter;0x230A;8970;0;HP010;parHpMinFlowmeter;Minimum flow rate allowed in the heating circuit;uint16;(A.0 + B.1) x 0.01;0.00;31013;0;90;1;;4;4
+parameter;0x230B;8971;0;HP011;parHpMessFlowmeter;Minimum heating circuit flow rate that triggers a warning message indicating that flow is going low;uint16;(A.0 + B.1) x 0.01;0.00;31013;0;95;1;;3;3
+parameter;0x231D;8989;0;HP029;parHpBackupType;Set the type of backup used in the heat pump.;uint8;A;0;;0;3;;HpBackupType;3;4
+parameter;0x231E;8990;0;HP030;parHpDelayGeneratorStart;Delay for starting the next generator (backup stage) in central heating mode;uint16;(A.0 + B.1) x 1;0;31004;0;600;1;;2;2
+parameter;0x231F;8991;0;HP031;parHpDelayGeneratorStop;Delay to stop the next generator (backup stage) when the setpoint is reached in central heating mode;uint16;(A.0 + B.1) x 1;0;31004;0;600;1;;2;2
+parameter;0x2321;8993;0;HP033;parHpElectricPulseValency;Pulse valency of the electrical meter (Wh);uint16;(A.0 + B.1) x 1;0;31021;0;1000;1;;3;3
+parameter;0x2322;8994;0;HP034;parHpBackup1StageCapacity;Capacity of the 1st electrical backup stage - Deprecated to be replaced by higher resolution datapoints;uint8;(A) x 1;0;31019;0;10;1;;4;4
+parameter;0x2323;8995;0;HP035;parHpBackup2StageCapacity;Capacity of the 2nd electrical backup stage- Deprecated to be replaced by higher resolution datapoints;uint8;(A) x 1;0;31019;0;10;1;;4;4
+parameter;0x2324;8996;0;HP036;parHpGlycol;Rate of glycol in the installation (%);uint8;A;0;;0;3;;GlycolPercentage;4;4
+parameter;0x232D;9005;0;HP045;parHpHysteresisLimitPacHigh;On/Off hysteresis Heat Pump high;uint16;(A.0 + B.1) x 0.01;0.00;31001;1;10;1;;5;5
+parameter;0x232E;9006;0;HP046;parHpHysteresisLimitPacLow;On/Off hysteresis heat pump low;uint16;(A.0 + B.1) x 0.01;0.00;31001;1;10;1;;5;5
+parameter;0x232F;9007;0;HP047;parHpTimeLowOutsideTemp;Minimum time at minimum outside temperature to start back up in CH mode when dynamic timer selected;uint8;(A) x 1;0;31004;0;60;1;;2;2
+parameter;0x2330;9008;0;HP048;parHpTimeHighOutsideTemp;Maximum time at maximum outside temperature to start back up in CH mode when dynamic timer selected;uint8;(A) x 1;0;31004;0;60;1;;2;2
+parameter;0x2331;9009;0;HP049;parHpLowOutsideTempValue;Minimum outside temperature for dynamic timer when dynamic mode is selected;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-30;0;0.5;;2;2
+parameter;0x2332;9010;0;HP050;parHpHighOutsideTempValue;Maximum  outside temperature for dynamic timer when dynamic mode is selected;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-30;20;0.5;;2;2
+parameter;0x2333;9011;0;HP051;parHpMinimumOutsideTemperatureHP;Minimum outside temperature below which Heat Pump is stopped;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-15;5;0.5;;3;3
+parameter;0x2334;9012;0;HP052;parHpMaximumOutsideHybridEnabled;Maximum outside temperature to allow Heat Pump to operate;uint16;(A.0 + B.1) x 0.01;0.00;31001;15;31;1;;5;5
+parameter;0x2336;9014;0;HP054;parHpCOPThreshold;COP threshold above which heat pump is authorized to operate when hybrid mode is primary energy;uint16;(A.0 + B.1) x 0.01;0.00;;1;5;0.10000000000000001;;2;2
+parameter;0x2337;9015;0;HP055;parHpCOPHysteresis;Coefficient of Performance  Hysteresis;uint16;(A.0 + B.1) x 0.01;0.00;;0.10000000000000001;1;0.10000000000000001;;4;4
+parameter;0x233A;9018;0;HP058;parHpSilentMode;Enabling Heat pump Silent mode;uint8;A;0;;0;1;;SilentMode;2;2
+parameter;0x233C;9020;0;HP060;parHpFlowTemperatureAveragePeriode;Heat pump Flow Temperature average;uint8;(A) x 1;0;;0;255;1;;5;5
+parameter;0x233D;9021;0;HP061;parHpHybrid;Hybrid mode selected;uint8;A;0;;0;3;;HybridType;2;2
+parameter;0x233E;9022;0;HP062;parHpHybridElectricalCostTariff1;Hybrid Electricity cost in high tarif;uint8;(A) x 1;0;;1;255;1;;1;1
+parameter;0x233F;9023;0;HP063;parHpHybridElectricalCostTariff2;Hybrid Electricity cost in low tarif;uint8;(A) x 1;0;;1;250;1;;1;1
+parameter;0x2340;9024;0;HP064;parHpHybridGasOilCost;Cost of fossil energy (oil or gas) - price per litre or per m3;uint8;(A) x 1;0;;1;250;1;;1;1
+parameter;0x2341;9025;0;HP065;parHpHybridCoefEmCO2ElecCH;Electrical CO2 emission in heating mode;uint8;(A) x 1;0;;0;100;1;;2;2
+parameter;0x2342;9026;0;HP066;parHpHybridCoefEmCO2ElecDHW;Electrical CO2 emission in DHW mode;uint8;(A) x 1;0;;0;100;1;;2;2
+parameter;0x2343;9027;0;HP067;parHpHybridCoefEmCO2GasOil;Gas or Oil CO2 emission;uint8;(A) x 1;0;;0;100;1;;2;2
+parameter;0x2344;9028;0;HP068;parHpHybridBoilerEfficiency;Boiler in appliance efficiency;uint8;(A) x 1;0;31014;50;100;1;;2;2
+parameter;0x2345;9029;0;HP069;parHpFlowSetpoint;Heat Pump flow  speed set-point depending on Heat Pump Power configuration;uint16;(A.0 + B.1) x 0.01;0.00;31013;7;100;1;;3;4
+parameter;0x2346;9030;0;HP070;parHpTRMin;Minimum Heat Pump return temperature to start backup during defrosting;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;50;1;;4;4
+parameter;0x2347;9031;0;HP071;parHpTRMaxStop;Maximum Heat Pump Return Temperature to stop heat pump during defrosting;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;50;1;;4;4
+parameter;0x2348;9032;0;HP072;parHpTFMin;Heat Pump flow temperature to stop Heat Pump during defrosting;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;50;1;;4;4
+parameter;0x2349;9033;0;HP073;parHpTFMaxStop;HPTF to stop HP;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;50;1;;4;4
+parameter;0x234A;9034;0;HP074;parHpHysteresisHeatpumpMin;Heat pump minimum hysteresis;uint16;(A.0 + B.1) x 0.01;0.00;31001;1;10;1;;5;5
+parameter;0x234B;9035;0;HP075;parHpHysteresisHeatpumpMax;Heat pump maximum hysteresis;uint16;(A.0 + B.1) x 0.01;0.00;31001;1;10;1;;5;5
+parameter;0x234F;9039;0;HP079;parHpDeltaCooling;Maximum Cooling offset;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;15;1;;3;3
+parameter;0x2350;9040;0;HP080;parHpRelHumidity;Maximum humidity to start the cooling offset;uint8;(A) x 1;0;31014;0;100;1;;3;3
+parameter;0x2356;9046;0;HP086;parHpBufferTankEnabled;Enable buffer tank function for heat pump, select whether it's a buffer tank without, or with sensor.;uint8;A;0;;0;1;;BufferTankPresent;2;2
+parameter;0x2357;9047;0;HP087;parHpBufferTankHysterisis;buffer tank hysterisis to start and stop heating;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;30;1;;2;2
+parameter;0x2358;9048;0;HP088;parHpNeutralBandHysteresisHigh;Hysteresis to stop heat production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;10;1;;4;4
+parameter;0x2359;9049;0;HP089;parHpNeutralBandHysteresisLow;Hysteresis to start heat production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;10;1;;4;4
+parameter;0x235A;9050;0;HP090;parHpMaxErrorGain;max error gain to send for backup hydraulic;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;10;1;;5;5
+parameter;0x235B;9051;0;HP091;parHpOffsetChPhotovoltaic;Add Offset to CH setpoint when Photovoltaic function is enabled;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;30;1;;2;2
+parameter;0x235C;9052;0;HP092;parHpOffsetDhwPhotovoltaic;Add Offset to the Dhw setpoint when Photovoltaic function is enabled;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;30;1;;5;5
+parameter;0x235D;9053;0;HP093;parHpMax05VHpChSetpoint;Maximum output of heat source pump;uint16;(A.0 + B.1) x 0.01;0.00;31001;40;60;1;;4;4
+parameter;0x235E;9054;0;HP094;parHpStartTimeLowNoise;start Time fot Low Noise Function;uint8;(A) x 1;0;31025;0;143;1;;2;2
+parameter;0x235F;9055;0;HP095;parHpStopTimeLowNoise;Stop Time For Low Noise Function;uint8;(A) x 1;0;31025;0;143;1;;2;2
+parameter;0x2360;9056;0;HP096;parHpBackupPcuCHmaxTset;Max CH Setpoint of backup PCU;uint8;(A) x 1;0;31001;20;90;1;;5;5
+parameter;0x2361;9057;0;HP097;parHpBackupPcuDhwTset;hydraulic Backup PCU dhw setpoint;uint8;(A) x 1;0;31001;40;75;1;;5;5
+parameter;0x2362;9058;0;HP098;parHpBackupPcuDhwMode;Dhw mode of Hydraulic Backup PCU;uint8;A;0;;0;2;;DhwMode;5;5
+parameter;0x2363;9059;0;HP099;parHpBackupPcuPumpPostRun;Pump Post Run of Hydraulic Backup PCU;uint8;(A) x 1;0;31004;0;99;1;;5;5
+parameter;0x2364;9060;0;HP100;parHpBackupPcuRpmMaxCh;Maximum CH Air flow Hydraulic Backup PCU;uint8;(A) x 100;0;31009;1000;9000;100;;5;5
+parameter;0x2365;9061;0;HP101;parHpBackupPcuRpmMaxDhw;Maximum Dhw Air flow Hydraulic Backup PCU;uint8;(A) x 100;0;31009;1000;9000;100;;5;5
+parameter;0x2366;9062;0;HP102;parHpBackupPcuRpmMin;Minimum Air flow Hydraulic Backup PCU;uint8;(A) x 100;0;31009;1000;5000;100;;5;5
+parameter;0x2367;9063;0;HP103;parHpBackupPcuPumpSpeedMin;CH minimum pump speed backup Pcu;uint8;(A) x 1;0;;2;10;1;;5;5
+parameter;0x2368;9064;0;HP104;parHpBackupPcuPumpSpeedMax;CH maximum pump speed Hydraulic Backup PCU;uint8;(A) x 1;0;;2;10;1;;5;5
+parameter;0x2369;9065;0;HP105;parHpBackupPcuPresent;Backup PCU present Yes or No;uint8;A;0;;0;1;;YesNo;4;4
+parameter;0x236A;9066;0;HP106;parHpFlowmeterType;Type of flowmeter equipped;uint8;A;0;;0;2;;FlowmeterType;5;5
+parameter;0x236B;9067;0;HP107;parHpBackupPcuRpmMinOffset;PCU Airflow Minimal offset Backup;uint8;(A) x 1;0;31009;0;99;1;;5;5
+parameter;0x236C;9068;0;HP108;parHpTempoBetweenStagesCh;Delay time for switching on the next generator in Central Heating mode;uint8;(A) x 1;0;31004;1;255;1;;5;5
+parameter;0x236E;9070;0;HP110;parHpSmartStopHeatPumpAlgorithm;The smart stop heat pump function stops heat pump with a voltage of 0.8V, after smart stop heat pump timer,it goes to 0.2V;uint8;A;0;;0;1;;OffOn;4;4
+parameter;0x236F;9071;0;HP111;parHpSmartStopHeatPumpTimer;Timer when smart stop heat pump algorithm is activated;uint8;(A) x 1;0;31004;0;255;1;;4;4
+parameter;0x2370;9072;0;HP112;parHpOutdoorUnitManufacturer;Brand of outdoor unit used in the system;uint8;A;0;;0;2;;OutdoorUnitHeatPumpManufacturer;4;4
+parameter;0x2371;9073;0;HP113;parHpBackupPcuDfDuConfiguration;Parameter used to set the dFdU of PCU;uint16;(A.0 + B.1) x 0.01;0.00;;0;255.99000000000001;0.01;;3;3
+parameter;0x2388;9096;0;HP136;parHpPumpSpeedMax;"Max pump speed for the HP pump. 
+The HP pump is present if the hydraulic of the indoor unit contains a buffer tank. The HP pump is located between the condenser and the buffer tank.";uint8;(A) x 1;0;31014;20;100;1;;5;5
+parameter;0x2389;9097;0;HP137;parHpPumpSpeedMin;"Minimum pump speed for the HP pump. 
+The HP pump is present if the hydraulic of the indoor unit contains a buffer tank. The HP pump is located between the condenser and the buffer tank.";uint8;(A) x 1;0;31014;20;100;1;;5;5
+parameter;0x238A;9098;0;HP138;parHpPumpPostRun;HP pump post operation time after shutdown of the compressor.;uint8;(A) x 1;0;31003;0;255;1;;5;5
+parameter;0x238B;9099;0;HP139;parHpIPump;I factor of the PID control of the condenser water pump speed;uint8;(A) x 1;0;;1;200;1;;5;5
+parameter;0x238C;9100;0;HP140;parHpDPump;D factor of the PID control of the condenser water pump speed;uint8;(A) x 1;0;;0;255;1;;5;5
+parameter;0x238D;9101;0;HP141;parHpPPump;P factor of the PID control of the condenser water pump speed;uint8;(A) x 1;0;;0;255;1;;5;5
+parameter;0x238E;9102;0;HP142;parHpPIRangePump;Pump PI control range;uint8;(A) x 1;0;;0;255;1;;5;5
+parameter;0x238F;9103;0;HP143;parHpMaxCompressorDhwTemp;Maximum Dhw temperature inside the tank that allows the compressor to operate;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;20;65;1;;5;5
+parameter;0x2390;9104;0;HP144;parHpDhwFlowSetpoint;Heat Pump flow  speed set-point depending on Heat Pump Power configuration in Dhw mode;uint16;(A.0 + B.1) x 0.01;0.00;31013;5;100;1;;4;4
+parameter;0x2391;9105;0;HP145;parHpDhwBackupCapacity;Capacity of the DHW electrical backup stage;uint8;(A) x 0.1;0.0;31019;0;1;0.10000000000000001;;5;5
+parameter;0x2392;9106;0;HP146;parHpOutdoorUnitType;Type of outdoor unit used;uint8;A;0;;0;1;;OutdoorUnitType;4;4
+parameter;0x3001;12289;0;AP001;parApBlockingFunction;Function blocking input;uint8;A;0;;1;11;;BlockingFunction;3;3
+parameter;0x3002;12290;0;AP002;parApEnableManualHeatDemand;Enable manual heat demand function.;uint8;A;0;;0;1;;ManualHeatDemandFunction;3;3
+parameter;0x3006;12294;0;AP006;parApMinWaterPress;The appliance will either report low water pressure, or start auto filling function when activated.;uint8;(A) x 0.1;0.0;31008;0;4;0.10000000000000001;;4;4
+parameter;0x3007;12295;0;AP007;parApTfMaxBlocking;Max flow temperature before blocking;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;110;1;;5;5
+parameter;0x3009;12297;0;AP009;parApServiceBurnHours;Number of generator operating hours for raising a service notification;uint16;(A.0 + B.1) x 2;0;31005;0;65534;2;;2;2
+parameter;0x300A;12298;0;AP010;parApServiceNotification;Select the type of service notification;uint8;A;0;;0;2;;ServiceNotification;2;2
+parameter;0x300B;12299;0;AP011;parApServiceOperationTime;Operating for between service notification;uint16;(A.0 + B.1) x 2;0;31005;100;65534;2;;2;2
+parameter;0x300F;12303;0;;parApDeviceName;Device name used to give the commercial name of the boiler in service tools.;string;;;;;;;;1;3
+parameter;0x3011;12305;0;AP015;parApCoolingForced;Cooling forced;uint8;A;0;;0;1;;YesNo;1;1
+parameter;0x3012;12306;0;AP016;parApChEnabled;CH enabled;uint8;A;0;;0;1;;OffOn;1;1
+parameter;0x3013;12307;0;AP017;parApDhwEnabled;DHW enabled;uint8;A;0;;0;1;;OffOn;1;1
+parameter;0x301B;12315;0;AP025;parApOperationalModeSw;Operational mode sw;uint8;A;0;;0;2;;OperationalModeSw;4;4
+parameter;0x301C;12316;0;AP026;parApHeatDemandFlowTemperatureSetpoint;set point for the manual heat demand;uint16;(A.0 + B.1) x 0.01;0.00;31001;7;70;1;;3;3
+parameter;0x301E;12318;0;AP028;parApCooling;Defines the type of cooling used either active or free cooling;uint8;A;0;;0;1;;Cooling;2;2
+parameter;0x301F;12319;0;AP029;parApCoolingPermission;Cooling permission;uint8;A;0;;0;1;;CoolingAllowed;3;5
+parameter;0x3029;12329;0;AP056;parApOutsideSensorType;Selector for the outside sensor type connected to the zone;uint8;A;0;;0;2;;OutsideSensorType;3;3
+parameter;0x302B;12331;0;AP058;parApMessMinWaterPressure;Warning message indicating that pressure is low;uint8;(A) x 0.1;0.0;31008;0;2;0.10000000000000001;;2;2
+parameter;0x3030;12336;0;AP063;parApMaxTemperatureSetpoint;Maximum flow temperature setpoint of the appliance;uint16;(A.0 + B.1) x 0.01;0.00;31001;20;90;1;;3;3
+parameter;0x3039;12345;0;AP072;parApHumiditySensorType;Humidity Sensor Type;uint8;A;0;;0;2;;HumiditySensorType;3;3
+parameter;0x303A;12346;0;AP073;parApSummerWinter;Outdoor temperature: upper limit for  heating;uint16;(A.0 + B.1) x 0.01;0.00;31001;10;30.5;0.5;;2;2
+parameter;0x303B;12347;0;AP074;parApForceSummerMode;The heating is  stopped. Hot water is  maintained. Force Summer Mode;uint8;A;0;;0;1;;OffOn;1;1
+parameter;0x303C;12348;0;AP075;parApNeutralBandSummerWinter;Only used when genertor could use cooling .Neutral band in which the HP is deactivated;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;20;0.5;;2;2
+parameter;0x303D;12349;0;AP076;parApDeltaWarningFlow;Warning message indicating that the flowsetpoint target is not reached;uint8;(A) x 1;0;31013;0;255;1;;5;5
+parameter;0x303E;12350;0;AP077;parApMaxUserLevelMk;Maximum Level of parameters and signals to diplay on MK;uint8;A;0;;1;5;;UserLevel;1;5
+parameter;0x3040;12352;0;AP079;parBuildingInertia;Inertia of the building used for heat up speed;uint8;(A) x 1;0;;0;10;1;;2;2
+parameter;0x3041;12353;0;AP080;parApFrostMinToutside;Outside temperature below which the antifreeze protection is activated;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-30;30.5;0.5;;2;2
+parameter;0x3042;12354;0;AP081;parApDeviceNameShort;Abbreviation of the parApDeviceName consisting of two letters and one number. Used for ALL brands will not be used for seperate CN1/CN2 combinations.;string;;;;;;;;1;5
+parameter;0x3043;12355;0;AP082;parApDaylightSavingEnabled;Enable daylight saving for the system.;uint8;A;0;;0;1;;OffOn;2;2
+parameter;0x3044;12356;0;AP083;parApSbusMasterEnabled;Enabled the master functionality of this device on the S-Bus. If multiple devices have this parameter all will be reset to 0 automatically.;uint8;A;0;;0;1;;YesNo;5;5
+parameter;0x3047;12359;0;;parApApplianceName;Commercial name of the appliance.   S-Bus this will be used as a custom name for installers to name components.;string;;;;;;;;1;5
+parameter;0x304A;12362;0;AP089;parApInstallerName;Installer's Company Name;string;;;;;;;;1;2
+parameter;0x304B;12363;0;AP090;parApInstallerTelephoneNumber;Installer's phone number;string;;;;;;;;1;2
+parameter;0x3052;12370;0;AP097;parApWaterPressureSensorPresent;Water pressure sensor present on the appliance;uint8;A;0;;0;1;;YesNo;5;5
+parameter;0x3053;12371;0;AP098;parApBlocking1ContactLogic;Logic contact to take into account for Blocking input 1;uint8;A;0;;0;1;;OpenClose;3;3
+parameter;0x3054;12372;0;AP099;parApBlocking2ContactLogic;Logic contact to take into account for Blocking input 2;uint8;A;0;;0;1;;OpenClose;3;3
+parameter;0x3055;12373;0;AP100;parApBlockingFunction2;Blocking input function;uint8;A;0;;1;11;;BlockingFunction;2;2
+parameter;0x3056;12374;0;AP101;parApDeairationCycle;De-airation;uint8;A;0;;0;2;;OffAutoON;2;2
+parameter;0x3057;12375;0;AP102;parApPumpZoneDedicated;Using the boiler pump as zone pump? Otherwise the pump will be used as system pump (feed lowloss header).;uint8;A;0;;0;1;;YesNo;3;3
+parameter;0x3062;12386;0;AP107;parApColorMk2Display;Color display Mk2;uint8;A;0;;0;6;;Colour;3;5
+parameter;0x3068;12392;0;AP091;parApToutsideTypeSensorConnectionToUse;Type of sensor connection to be used for the outdoorsensor (internet / wired / wireless);uint8;A;0;;0;4;;typeOutdoorSensorConnection;2;2
+parameter;0x3069;12393;0;AP092;parApMaxPowerSetpointCh;High limit of producer's regulation in CH mode;uint8;(A) x 1;0;31014;0;100;1;;3;3
+parameter;0x306E;12398;0;AP108;parApOutsideSensorTypeDetected;The Outside sensor function type that was stored upon detection. Used for errors. Is a hidden parameter >= level 4;uint8;A;0;;0;4;;typeOutdoorSensorConnection;4;4
+parameter;0x3200;12800;0;PP040;parChD;PID controller Differential (D) factor for central heating temperature control;uint8;(A) x 1;0;;0;255;1;;4;4
+parameter;0x3203;12803;0;PP003;parChIPump;I factor for pump speed control, to control the delta T on the heat exchanger;uint8;(A) x 1;0;;1;200;1;;4;4
+parameter;0x3204;12804;0;PP004;parChIUp;Integral factor central heating temperature.;uint8;(A) x 1;0;;1;200;1;;4;4
+parameter;0x320F;12815;0;PP015;parChPumpPostRun;System pump post run time;uint8;(A) x 1;0;31004;0;99;1;;3;3
+parameter;0x3210;12816;0;PP016;parChPumpSpeedMax;maximum system pump speed;uint8;(A) x 1;0;31014;20;100;1;;3;3
+parameter;0x3212;12818;0;PP018;parChPumpSpeedMin;Minimum system pump speed;uint8;(A) x 1;0;31014;20;100;1;;3;3
+parameter;0x3213;12819;0;PP019;parChPUp;Proportional factor CH temperature controller.;uint8;(A) x 1;0;;0;100;1;;4;4
+parameter;0x321E;12830;0;PP029;parChDPump;D factor for pump speed control;uint8;(A) x 1;0;;0;200;1;;4;4
+parameter;0x321F;12831;0;PP030;parChPPump;P factor for pump speed control;uint8;(A) x 1;0;;0;255;1;;4;4
+parameter;0x3220;12832;0;PP031;parChPIRangePump;Pump PI control range;uint8;(A) x 1;0;;0;255;1;;4;4
+parameter;0x3401;13313;1;CP000;parZoneTFlowSetpointMax;Zone Maximal Flow temperature setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;7;70;1;;2;2
+parameter;0x3402;13314;1;CP010;parZoneTFlowSetpoint;Temperature setpoint for Zone when Outside sensor not present;uint16;(A.0 + B.1) x 0.01;0.00;31001;7;70;1;;3;3
+parameter;0x3404;13316;1;CP020;parZoneFunction;Function of zone;uint8;A;0;;0;2;;ZoneFunction;2;2
+parameter;0x3405;13317;1;CP030;parZoneMixingValveBandwith;Bandwith of mixing valve of zone in which modulation takes place.If zone doesn't have a mixing valve, parameter will be ignored for that zone.;uint16;(A.0 + B.1) x 0.01;0.00;31001;4;16;1;;4;4
+parameter;0x3406;13318;1;;parZoneEnableRubCommunication;Used by Control Team to force the communication only on RUB without OTH/RUB detection;uint8;(A) x 1;0;;0;1;1;;5;5
+parameter;0x3408;13320;1;CP040;parZonePumpPostRun;Delay of post operation of the zone pump;uint8;(A) x 1;0;31004;0;20;1;;2;2
+parameter;0x3409;13321;1;CP050;parZoneMixingValveShift;Shift between setpoint calculated and setpoint send to consumer manager for mixing zone;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;16;1;;4;4
+parameter;0x340A;13322;1;CP060;parZoneAmbiantHolidaySetpoint;Wished room temperature in holiday period of the zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;20;0.5;;2;2
+parameter;0x340B;13323;1;CP070;parZoneAmbiantNightSetpoint;Room setpoint to switch from comfort to reduce in heating mode;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;2;2
+parameter;0x340C;13324;1;CP080;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340C;13324;2;CP081;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340C;13324;3;CP082;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340C;13324;4;CP083;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340C;13324;5;CP084;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340C;13324;6;CP085;parZoneRoomUserActivitySetpoint;Setpoint temperature of the user activity per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x340D;13325;1;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340D;13325;2;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340D;13325;3;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340D;13325;4;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340D;13325;5;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340D;13325;6;;parZoneFriendlyNameUserActivity;Friendly name of the user activity per zone;string;;;;;;;;1;1
+parameter;0x340E;13326;1;CP130;parZoneToutsideExternalSelector;DEPRECATED. External selector of the outside temperature sensor per zone;uint8;(A) x 1;0;;0;4;1;;5;5
+parameter;0x340F;13327;1;;parZoneFriendlyName;Zone friendly name;string;;;;;;;;1;1
+parameter;0x3410;13328;1;;parZoneFriendlyNameShort;Zone friendly name short. This is the hardware name used by the installer to identify the hardware connections.;string;;;;;;;;1;5
+parameter;0x3411;13329;1;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3411;13329;2;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3411;13329;3;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3411;13329;4;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3411;13329;5;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3411;13329;6;;parZoneFriendlyNameCoolingSetpoint;Friendly Name of Cooling Room Temperature Setpoint;string;;;;;;;;2;2
+parameter;0x3412;13330;1;CP140;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3412;13330;2;CP141;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3412;13330;3;CP142;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3412;13330;4;CP143;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3412;13330;5;CP144;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3412;13330;6;CP145;parZoneRoomCoolingSetpoint;Room Setpoint temperature of the user activity per zone in cooling;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;1;1
+parameter;0x3413;13331;1;CP200;parZoneRoomManualSetpoint;Manually set wished room temperature of the zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x3414;13332;1;CP210;parZoneHCZPD;Curve base temperature in comfort mode;uint16;(A.0 + B.1) x 0.1;0.0;31001;15;90;0.5;;2;2
+parameter;0x3415;13333;1;CP220;parZoneHCZPN;Curve base temperature in reduce mode;uint16;(A.0 + B.1) x 0.1;0.0;31001;15;90;0.5;;2;2
+parameter;0x3416;13334;1;CP230;parZoneSlope;Slope of the heat curve of the zone;uint8;(A) x 0.1;0.0;;0;4;0.10000000000000001;;2;2
+parameter;0x3417;13335;1;CP240;parZoneRoomUnitInfluence;Influence of the room sensor of the zone;uint8;(A) x 1;0;;0;10;1;;2;2
+parameter;0x3418;13336;1;CP250;parZoneRoomSensorCalibration;Adjustment of the sensor of the zone;int8;sgn(A) x 0.1;0.0;31001;-5;5;0.10000000000000001;;5;5
+parameter;0x3419;13337;1;CP260;parZoneTFlowSetpointMin;Minimal flow temperature set point requested during Antifrost mode;uint16;(A.0 + B.1) x 0.01;0.00;31001;10;50;1;;4;4
+parameter;0x341A;13338;1;CP270;parZoneTFlowCoolingMixingSetpoint;Flow temperature set point requested during cooling;uint16;(A.0 + B.1) x 0.01;0.00;31001;18;23;1;;2;2
+parameter;0x341B;13339;1;CP280;parZoneTFlowCoolingFanSetpoint;Flow temperature set point requested during cooling;uint16;(A.0 + B.1) x 0.01;0.00;31001;18;23;1;;2;2
+parameter;0x341C;13340;1;CP290;parZonePumpOutputConfiguration;Pump output configuration;uint8;A;0;;0;9;;ZonePumpOutput;5;5
+parameter;0x341E;13342;1;CP310;parZoneAutoAdapt;Configuration of the automatic adaptation of the Heat Curves CH 0:NO 1:YES;uint8;A;0;;0;1;;OffOn;5;5
+parameter;0x341F;13343;1;CP320;parZoneMode;Mode Zone Working 0:Scheduling 1:Manual 2:Antifrost;uint8;A;0;;0;2;;ModeZoneWorking;1;1
+parameter;0x3420;13344;1;CP330;parZoneMixingValveOpeningTime;Time to open the mixing valve completely;uint8;(A) x 1;0;31003;0;240;1;;4;4
+parameter;0x3421;13345;1;;parZoneStartTimeHoliday;Start Time holiday Mode  TimeStamp CIA;array;;;;;;;;1;1
+parameter;0x3422;13346;1;;parZoneEndTimeHoliday;End Time holiday Mode TimeStamp CIA;array;;;;;;;;1;1
+parameter;0x3423;13347;1;;parZoneEndTimeModeChange;End  change mode Time TimeStamp CIA;array;;;;;;;;1;1
+parameter;0x3424;13348;1;CP340;parZoneReducedNightMode;Type of Reduced Night Mode, stop or maintain heating of circuit;uint8;A;0;;0;1;;NightReduceOrFrost;2;2
+parameter;0x3431;13361;1;;parZoneTimeProgramMonday1;Time program 1 monday per zone;array;;;;;;;;1;1
+parameter;0x3432;13362;1;;parZoneTimeProgramTuesday1;Time program 1 tuesday per zone;array;;;;;;;;1;1
+parameter;0x3433;13363;1;;parZoneTimeProgramWednesday1;Time program 1 wednesday per zone;array;;;;;;;;1;1
+parameter;0x3434;13364;1;;parZoneTimeProgramThursday1;Time program 1 thursday per zone;array;;;;;;;;1;1
+parameter;0x3435;13365;1;;parZoneTimeProgramFriday1;Time program 1 friday per zone;array;;;;;;;;1;1
+parameter;0x3436;13366;1;;parZoneTimeProgramSaturday1;Time program 1 saturday per zone;array;;;;;;;;1;1
+parameter;0x3437;13367;1;;parZoneTimeProgramSunday1;Time program 1 sunday per zone;array;;;;;;;;1;1
+parameter;0x3438;13368;1;;parZoneTimeProgramMonday2;Time program 2 monday per zone;array;;;;;;;;1;1
+parameter;0x3439;13369;1;;parZoneTimeProgramTuesday2;Time program 2 tuesday per zone;array;;;;;;;;1;1
+parameter;0x343A;13370;1;;parZoneTimeProgramWednesday2;Time program 2 wednesday per zone;array;;;;;;;;1;1
+parameter;0x343B;13371;1;;parZoneTimeProgramThursday2;Time program 2 thursday per zone;array;;;;;;;;1;1
+parameter;0x343C;13372;1;;parZoneTimeProgramFriday2;Time program 2 friday per zone;array;;;;;;;;1;1
+parameter;0x343D;13373;1;;parZoneTimeProgramSaturday2;Time program 2 saturday per zone;array;;;;;;;;1;1
+parameter;0x343E;13374;1;;parZoneTimeProgramSunday2;Time program 2 sunday per zone;array;;;;;;;;1;1
+parameter;0x343F;13375;1;;parZoneTimeProgramMonday3;Time program 3 monday per zone;array;;;;;;;;1;1
+parameter;0x3440;13376;1;;parZoneTimeProgramTuesday3;Time program 3 tuesday per zone;array;;;;;;;;1;1
+parameter;0x3441;13377;1;;parZoneTimeProgramWednesday3;Time program 3 wednesday per zone;array;;;;;;;;1;1
+parameter;0x3442;13378;1;;parZoneTimeProgramThursday3;Time program 3 thursday per zone;array;;;;;;;;1;1
+parameter;0x3443;13379;1;;parZoneTimeProgramFriday3;Time program 3 friday per zone;array;;;;;;;;1;1
+parameter;0x3444;13380;1;;parZoneTimeProgramSaturday3;Time program 3 saturday per zone;array;;;;;;;;1;1
+parameter;0x3445;13381;1;;parZoneTimeProgramSunday3;Time program 3 sunday per zone;array;;;;;;;;1;1
+parameter;0x3446;13382;1;;parZoneTimeProgramMonday4;Time program 4 monday per zone;array;;;;;;;;1;1
+parameter;0x3447;13383;1;;parZoneTimeProgramTuesday4;Time program 4 tuesday per zone;array;;;;;;;;1;1
+parameter;0x3448;13384;1;;parZoneTimeProgramWednesday4;Time program 4 wednesday per zone;array;;;;;;;;1;1
+parameter;0x3449;13385;1;;parZoneTimeProgramThursday4;Time program 4 thursday per zone;array;;;;;;;;1;1
+parameter;0x344A;13386;1;;parZoneTimeProgramFriday4;Time program 4 friday per zone;array;;;;;;;;1;1
+parameter;0x344B;13387;1;;parZoneTimeProgramSaturday4;Time program 4 saturday per zone;array;;;;;;;;1;1
+parameter;0x344C;13388;1;;parZoneTimeProgramSunday4;Time program 4 sunday per zone;array;;;;;;;;1;1
+parameter;0x344D;13389;1;CP470;parZoneScreedDrying;Setting the number of days requested  for screed drying program;uint8;(A) x 1;0;31006;0;30;1;;2;2
+parameter;0x344E;13390;1;CP480;parZoneStartDryingTemp;Setting of the start temperature of the screed drying programm;uint16;(A.0 + B.1) x 0.01;0.00;31001;20;50;1;;2;2
+parameter;0x344F;13391;1;CP490;parZoneStopDryingTemp;Setting of the stop temperature of the screed drying programm;uint16;(A.0 + B.1) x 0.01;0.00;31001;20;50;1;;2;2
+parameter;0x3450;13392;1;CP500;parZoneFlowSensorEnabled;Enable/Disable flow temperature sensor;uint8;A;0;;0;1;;OffOn;4;4
+parameter;0x3451;13393;1;CP510;parZoneTemporaryRoomSetpoint;Temporary room setpoint per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;5;30;0.5;;1;1
+parameter;0x3452;13394;1;CP520;parZonePowerSetpoint;Power setpoint per zone;uint8;(A) x 1;0;31014;0;100;1;;3;3
+parameter;0x3453;13395;1;CP530;parZonePwmPumpSpeed;PWM pump speed per zone;uint8;(A) x 1;0;31014;0;100;1;;3;3
+parameter;0x3455;13397;1;CP550;parZoneFirePlaceEnabled;Fire Place mode is active;uint8;A;0;;0;1;;OffOn;1;1
+parameter;0x3458;13400;1;CP570;parZoneTimeProgramSelected;Time Program Selected by the user;uint8;A;0;;0;2;;TimeProgramSchedules;1;1
+parameter;0x345F;13407;1;CP640;parZoneOthLogicLevelContact;Logic level contact to start Heating 0 : Normally Open 1: Normally Close;uint8;A;0;;0;1;;OpenClose;2;2
+parameter;0x3460;13408;1;CP650;parZoneAmbiantCoolingNightSetpoint;Night ambient setpoint cooling per zone;uint16;(A.0 + B.1) x 0.1;0.0;31001;20;30;0.5;;2;2
+parameter;0x3463;13411;1;CP660;parZoneIconType;Icon used to display this zone.;uint8;A;0;;0;7;;ZoneIconType;1;1
+parameter;0x3465;13413;1;CP680;parZoneRoomUnitBusChannel;RUB channel of the RU that is connected to this zone;uint8;(A) x 1;0;;0;255;1;;3;3
+parameter;0x3466;13414;1;CP690;parZoneOthContactReversedForCooling;Logic level contact to start Cooling is reversed regarding heating;uint8;A;0;;0;1;;YesNo;2;2
+parameter;0x346A;13418;1;CP730;parZoneHeatUpSpeed;Heat up speed selection (0..5);uint8;A;0;;0;5;;ZoneHeatUpSpeed;3;3
+parameter;0x346B;13419;1;CP740;parZoneCoolDownSpeed;Cool down speed selection (0..4);uint8;A;0;;0;4;;ZoneCoolDownSpeed;3;3
+parameter;0x346C;13420;1;CP750;parZoneMaxPreHeatTime;Maximum pre-heat time;uint16;(A.0 + B.1) x 1;0;31004;0;240;1;;2;2
+parameter;0x346D;13421;1;;parZoneEnableMixingValveSmartAlgorithm;Enable the Mixing Valve Smart Algorithm. The power of the mixing valve is off after a 10 min continuous opening or closing state.;uint8;A;0;;0;1;;YesNo;5;5
+parameter;0x3470;13424;1;CP770;parZoneBuffered;zone after a buffer tank;uint8;A;0;;0;1;;YesNo;4;4
+parameter;0x3471;13425;1;CP780;parZoneHeatingControlStrategy;Use the room control and/or weather-compensated control strategies for flow setpoint calculation;uint8;A;0;;0;3;;HeatingControlStrategy;2;2
+parameter;0x3476;13430;1;CP830;parZonePumpDeltaOn;"Temperature hysteresis relative to the flow temperature setpoint.
+In heating mode , exceeding the low  level switches on the zone pump/ fun convector.";uint16;(A.0 + B.1) x 0.01;0.00;31001;0;10;0.5;;4;4
+parameter;0x3477;13431;1;CP840;parZonePumpDeltaOff;"Temperature hysteresis relative to the parZonePumpDeltaOn
+In heating mode , below the low  level switches off the zone pump/ fun convector.";uint16;(A.0 + B.1) x 0.01;0.00;31001;0;10;0.5;;4;4
+parameter;0x3600;13824;0;;parDhwSolarDtCompensation;Max control temperature offset for a stop condition when solar temperature close to setpoint. This offset is added to the default offset for combi. Max is when actual solar temperature = Dhw setpoint;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;10;0.01;;5;5
+parameter;0x3603;13827;0;DP003;parDhwFanRpmMax;Maximum fan speed on DHW;uint16;(A.0 + B.1) x 1;0;31009;1000;7000;1;;5;5
+parameter;0x3604;13828;0;DP004;parDhwAntiLegionella;legionella mode;uint8;A;0;;0;2;;AntiLegionella;4;4
+parameter;0x3607;13831;0;DP007;parDhw3wvStandby;Position of three way valve during standby;uint8;A;0;;0;1;;TwvPosition;4;4
+parameter;0x3608;13832;0;DP008;parDhwPumpDtSet;desired delta flow return for pump modulation on DHW;uint16;(A.0 + B.1) x 0.01;0.00;;5;80;0.01;;5;5
+parameter;0x3609;13833;0;DP009;parDhwDtStartFlow;"Raise factor for flow rate dependent  burner start conditions for combi during stab time. 
+During start for combi the burner must start earlier at flow rates above minimum for low load.";uint8;(A) x 1;0;31001;0;100;1;;5;5
+parameter;0x360A;13834;0;DP010;parDhwDtHysteresis;Temperature hysteresis for the generator to start on domestic hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;1;10;1;;5;5
+parameter;0x360B;13835;0;DP011;parDhwDtOffset;Temperature offset to stop generator on domestic hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;100;1;;5;5
+parameter;0x360C;13836;0;DP012;parDhwDtOffsetPlateHeatExchanger;Plate heat exchanger temperature offset for the control temperature calculation (avg Tf,Tr) at 60 degrees. The correction at other temperatures is defined by the used formula.;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;20;0.01;;5;5
+parameter;0x360D;13837;0;DP013;parDhwLoadAfterChTime;Time delay after CH mode where DHW comfort loading is started;uint8;(A) x 1;0;31004;0;255;1;;5;5
+parameter;0x360E;13838;0;DP014;parDhwLoadAfterDhwTime;Time delay after DHW mode where DHW comfort loading is started;uint8;(A) x 1;0;31004;0;255;1;;5;5
+parameter;0x3611;13841;0;DP017;parDhwPercentageTfTrLow;%  of Tf for the calculated dhw combi control temperature at 2 L/min. 100 % minus this parameter is the Tr part;uint8;(A) x 1;0;31014;0;100;1;;5;5
+parameter;0x3612;13842;0;DP018;parDhwPercentageTfTrHigh;%  of Tf for the calculated dhw combi control temperature at 7,5 L/min. 100 % minus this parameter is the Tr part;uint8;(A) x 1;0;31014;0;100;1;;5;5
+parameter;0x3613;13843;0;DP019;parDhwPumpDelay;Heat up the heat exchanger to prevent cooling hot plate heat ex;uint8;(A) x 1;0;31003;0;100;1;;4;4
+parameter;0x3614;13844;0;DP020;parDhwPumpPostRun;Time DHW pump is on after DHW headdemand is off;uint8;(A) x 1;0;31003;0;99;1;;4;4
+parameter;0x3616;13846;0;DP022;parDhwFlowDetection;Min flow rate to start and stop the combi heat demand;uint16;(A.0 + B.1) x 0.1;0.0;31013;0;10;0.10000000000000001;;4;4
+parameter;0x3617;13847;0;DP023;parDhwFlowSensor;Flow sensor or flow switch;uint8;A;0;;0;2;;FlowSensorType;5;5
+parameter;0x361B;13851;0;DP027;parDhwFlowAtRpm;DHW flow rate @ which the boiler runs at low load;uint16;(A.0 + B.1) x 0.1;0.0;31013;0;50;0.10000000000000001;;4;4
+parameter;0x361C;13852;0;DP028;parDhwFrequencyPulseTimeWindow;Used as hyst. for start stop tap flow detection. The time in which a defined amount of rotations need to be detected.;uint8;(A) x 1;0;31003;0;255;1;;4;4
+parameter;0x361D;13853;0;DP029;parDhwStabilizationTime;During this time the pump stays at start speed.;uint8;(A) x 1;0;31003;0;255;1;;4;4
+parameter;0x361E;13854;0;DP030;parDhwStabilizationGradient;The maximum gradient allowed to enable the pump modulation for dhw. When exceeded the pump is set to start speed for parDhwStabilizationTime;uint16;(A.0 + B.1) x 0.1;0.0;31002;0;200;0.10000000000000001;;4;4
+parameter;0x361F;13855;0;DP031;parDhwBoostStop;Stop the boosting power when the DHW temperature is in range of the setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;99;0.01;;4;4
+parameter;0x3620;13856;0;DP032;parDhwBoostPStart;Factor to increase power after DHW combi start, the effect is flow rate dependent. The boost power slowly decreases over time.;uint8;(A) x 1;0;;0;200;1;;4;4
+parameter;0x3621;13857;0;DP033;parDhwBoostPFeedForward;Change power at DWH flow rate changes;uint8;(A) x 1;0;;0;200;1;;4;4
+parameter;0x3626;13862;0;DP037;parDhwPumpSpeedMin;Minimum pump speed for Dhw;uint8;(A) x 1;0;31014;0;100;1;;5;5
+parameter;0x3627;13863;0;DP038;parDhwPumpSpeedMax;Maximum pump speed for Dhw;uint8;(A) x 1;0;31014;0;100;1;;5;5
+parameter;0x3628;13864;0;DP039;parDhwPumpSpeedStart;start pump speed at combi heat demand;uint8;(A) x 1;0;31014;0;100;1;;4;4
+parameter;0x362A;13866;0;DP041;parDhwCombiSoloUpP;P factor for combi temperature control;uint8;(A) x 1;0;;0;255;1;;4;4
+parameter;0x362B;13867;0;DP042;parDhwCombiSoloUpI;I factor for combi temperature control;uint8;(A) x 1;0;;1;255;1;;4;4
+parameter;0x362C;13868;0;DP043;parDhwIPump;I factor for pump modulation during combi mode;uint8;(A) x 1;0;;1;200;1;;4;4
+parameter;0x362F;13871;0;DP046;parDhwMaxTemp;Maximum DHW temperature;uint16;(A.0 + B.1) x 0.01;0.00;31001;10;70;1;;2;2
+parameter;0x3630;13872;0;DP047;parDhwMaxDhwTime;Maximum time allowed to produce DHW;uint8;(A) x 1;0;31005;1;10;1;;4;4
+parameter;0x3631;13873;0;DP048;parDhwMinChToDhwTime;Minimum heating time before DHW production;uint8;(A) x 1;0;31005;0;10;1;;4;4
+parameter;0x3634;13876;0;DP051;parDhwBoost;Domestic Hot Water ECO or COMFORT setting;uint8;A;0;;0;1;;DHWboost;2;2
+parameter;0x3638;13880;0;DP055;parDHWAciPresent;Enable/Disable Titan Active System dhw tank protection error reporting;uint8;A;0;;0;1;;YesNo;4;4
+parameter;0x363E;13886;1;;parZoneDHWPrimaryTimeProgramMonday1;Time program 1 of DHW primary Monday;array;;;;;;;;1;1
+parameter;0x363F;13887;1;;parZoneDHWPrimaryTimeProgramTuesday1;Time program 1 Dhw primary Tuesday;array;;;;;;;;1;1
+parameter;0x3640;13888;1;;parZoneDHWPrimaryTimeProgramWednesday1;Time program 1 Dhw primary Wednesday;array;;;;;;;;1;1
+parameter;0x3641;13889;1;;parZoneDHWPrimaryTimeProgramThursday1;Time program 1 Dhw primary Thursday;array;;;;;;;;1;1
+parameter;0x3642;13890;1;;parZoneDHWPrimaryTimeProgramFriday1;Time program 1 Dhw primary Friday;array;;;;;;;;1;1
+parameter;0x3643;13891;1;;parZoneDHWPrimaryTimeProgramSaturday1;Time program 1 Dhw primary Saturday;array;;;;;;;;1;1
+parameter;0x3644;13892;1;;parZoneDHWPrimaryTimeProgramSunday1;Time program 1 Dhw primary Sunday;array;;;;;;;;1;1
+parameter;0x3645;13893;1;;parZoneDHWPrimaryTimeProgramMonday2;Time program 2 Dhw primary monday;array;;;;;;;;1;1
+parameter;0x3646;13894;1;;parZoneDHWPrimaryTimeProgramTuesday2;Time program 2 Dhw primary Tuesday;array;;;;;;;;1;1
+parameter;0x3647;13895;1;;parZoneDHWPrimaryTimeProgramWednesday2;Time program 2 Dhw primary Wednesday;array;;;;;;;;1;1
+parameter;0x3648;13896;1;;parZoneDHWPrimaryTimeProgramThursday2;Time program 2 Dhw primary Thursday;array;;;;;;;;1;1
+parameter;0x3649;13897;1;;parZoneDHWPrimaryTimeProgramFriday2;Time program 2 Dhw primary Friday;array;;;;;;;;1;1
+parameter;0x364A;13898;1;;parZoneDHWPrimaryTimeProgramSaturday2;Time program 2 Dhw primary Saturday;array;;;;;;;;1;1
+parameter;0x364B;13899;1;;parZoneDHWPrimaryTimeProgramSunday2;Time program 2 Dhw primary Sunday;array;;;;;;;;1;1
+parameter;0x364C;13900;1;;parZoneDHWPrimaryTimeProgramMonday3;Time program 3 Dhw primary monday;array;;;;;;;;1;1
+parameter;0x364D;13901;1;;parZoneDHWPrimaryTimeProgramTuesday3;Time program 3 Dhw primary Tuesday;array;;;;;;;;1;1
+parameter;0x364E;13902;1;;parZoneDHWPrimaryTimeProgramWednesday3;Time program 3 Dhw primary Wednesday;array;;;;;;;;1;1
+parameter;0x364F;13903;1;;parZoneDHWPrimaryTimeProgramThursday3;Time program 3 Dhw primary Thursday;array;;;;;;;;1;1
+parameter;0x3650;13904;1;;parZoneDHWPrimaryTimeProgramFriday3;Time program 3 Dhw primary Friday;array;;;;;;;;1;1
+parameter;0x3651;13905;1;;parZoneDHWPrimaryTimeProgramSaturday3;Time program 3 Dhw primary Saturday;array;;;;;;;;1;1
+parameter;0x3652;13906;1;;parZoneDHWPrimaryTimeProgramSunday3;Time program 3 Dhw primary Sunday;array;;;;;;;;1;1
+parameter;0x3653;13907;1;DP060;parZoneDHWPrimaryTimeProgramSelected;Dhw primary Time program Selector;uint8;A;0;;0;2;;TimeProgramSchedules;1;1
+parameter;0x3654;13908;1;DP070;parZoneDhwPrimaryComfortSetpoint;"Zone Dhw primary Comfort Setpoint
+NOTE: In some cases a higher maximum value than 65 °C is required. This can be set in the device / appliance. Mixing Dhw to get a lower temperature is done at another point.";uint16;(A.0 + B.1) x 0.01;0.00;31001;40;65;1;;1;1
+parameter;0x3655;13909;1;DP080;parZoneDHWPrimaryReducedSetpoint;Zone DHW primary Reduced Setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;10;60;1;;1;1
+parameter;0x3656;13910;1;DP090;parZoneDHWPrimaryDelayGeneratorStart;Time Between producers start on DHW mode;uint8;(A) x 1;0;31004;0;120;1;;4;4
+parameter;0x3657;13911;1;DP100;parZoneDHWPrimaryDelayGeneratorStop;Time Between producers stop on DHW mode;uint8;(A) x 1;0;31004;0;120;1;;4;4
+parameter;0x3658;13912;1;DP110;parZoneDHWPrimaryTempoBetweenStages;Time Between Electrical stages on DHW mode;uint8;(A) x 1;0;31004;0;255;1;;4;4
+parameter;0x3659;13913;1;DP120;parZoneDHWPrimaryHysteresis;Hysteresis to start Dhw load;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;40;1;;4;4
+parameter;0x365A;13914;1;DP130;parZoneDHWPrimaryTOffset;Additional flow temperature setpoint raise to reach the DHW setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;20;1;;4;4
+parameter;0x365B;13915;1;DP140;parZoneDHWPrimaryLoadType;Type load on the DHW circuit. Combi, Solo, Layered, Process Heat, external combi (BIC);uint8;A;0;;0;2;;LoadType;3;5
+parameter;0x365C;13916;1;DP150;parZoneDHWPrimaryBoilerSwitch;Enable the function DHW start loading on ON/OFF contact;uint8;A;0;;0;1;;OffOn;2;2
+parameter;0x365D;13917;1;DP160;parZoneDHWprimaryAntiLegionellaSetpoint;Temperature setpoint for anti legionella;uint16;(A.0 + B.1) x 0.01;0.00;31001;60;90;1;;2;2
+parameter;0x365E;13918;1;DP170;parZoneDHWPrimaryStartTimeHoliday;Start time of holiday Timestamp CIA;array;;;;;;;;1;1
+parameter;0x365F;13919;1;DP180;parZoneDHWPrimaryEndTimeHoliday;End time of holiday Timestamp CIA;array;;;;;;;;1;1
+parameter;0x3660;13920;1;DP190;parZoneDHWPrimaryEndTimeModeChange;End  change mode Time TimeStamp CIA;array;;;;;;;;1;1
+parameter;0x3661;13921;1;DP200;parZoneDHWPrimaryMode;Mode Zone Dhw primary Working 0:Scheduling 1: Manual 2 :Antifrost;uint8;A;0;;0;2;;ModeZoneWorking;1;1
+parameter;0x3662;13922;0;DP210;parDHWoutSensorTolereance;Tolerance compensation for DWH out temperature sensor. The control temperature is corrected.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-10;10;0.01;;4;4
+parameter;0x3665;13925;1;DP213;parZoneDHWPrimaryPumpPostRun;Post run time of the DHW pump/3 way valve after DHW production;uint8;(A) x 1;0;31004;0;99;1;;4;4
+parameter;0x3666;13926;1;DP223;parZoneDHWPrimaryLoadAfterDhwTime;Leadtime before maintaining combi boiler temperature after DHW production;uint8;(A) x 1;0;31004;0;255;1;;5;5
+parameter;0x3667;13927;1;DP233;parZoneDHWPrimaryLoadAfterChTime;Leadtime before maintaining combi boiler temperature after CH production;uint8;(A) x 1;0;31004;0;255;1;;5;5
+parameter;0x3675;13941;1;DP337;parZoneDhwPrimaryHolidaySetpoint;Zone DHW primary Holiday Setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;10;60;1;;1;1
+parameter;0x3676;13942;1;DP347;parZoneDhwPrimaryMk1CombiMode;Combi DHW mode when MK1 is connected;uint8;A;0;;0;2;;DhwMode;4;4
+parameter;0x367A;13946;0;;parDhwFlowSensorRotationsPerLiter;Factor to calibrate the flow rate from rotations per per minute to l/m. The amount of water flowing through the Dhw flow rate sensor depends on the diameter of the sensor/hydraulic. The amount of pulses devided by this factor is the l/m.;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;4;4
+parameter;0x367B;13947;0;DP334;parDhwBackupType;Backup type used for DHW production. The backup can be located in the indoor unit or in the DHW tank.;uint8;A;0;;0;2;;DhwBackupType;5;5
+parameter;0x367D;13949;1;DP397;parDhwFlowSensorConfigurationTable;"Configuration table for various DHW flow sensors in one single software.
+Debit and number of pulses are mapped together to create a look-up table.";array;;;;;;;;5;5
+failure;0x4301;17153;0;HM001;varHpHeatPumpTF;Heat pump flow temperature after condenser;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+failure;0x4302;17154;0;HM002;varHpHeatPumpTR;Heat pump return temperature after condenser.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+failure;0x4329;17193;0;HM041;varHpBackupPcuLocking;Heat pump boiler backup pcu Locking;uint8;(A) x 1;0;;0;255;1;;1;4
+failure;0x434C;17228;0;;varHpOutdoorUnitErrorCode;Alarm codes when there is an alarm condition;int16;sgn(A.0 + B.1) x 1;0;;-4;32767;1;;1;3
+failure;0x5000;20480;0;AC001;varApCtrHoursTotal;Hours that pcb was powered;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+failure;0x500F;20495;0;AM012;varApStatus;Status of appliance;uint8;A;0;;0;254;;DeviceState;1;1
+failure;0x5011;20497;0;AM014;varApSubStatus;Sub Status of appliance;uint8;A;0;;0;255;;DeviceSubStatus;1;1
+failure;0x5016;20502;0;AM019;varApWaterPressure;actual Water pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;1;1
+failure;0x501E;20510;0;AM027;varApTOutside;Outside temperature measure;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+failure;0x50A9;20649;0;AM101;varApInternalSetpoint;Internal setpoint used for hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+failure;0x5419;21529;1;CM190;varZoneTRoomSetpoint;Current room temperature  setpoint requested;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;60;0.10000000000000001;;1;1
+failure;0x5601;22017;0;DM001;varDhwTankTemperature;Tank temperature DHW tank (bottom sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;4
+error;0x4301;17153;0;HM001;varHpHeatPumpTF;Heat pump flow temperature after condenser;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+error;0x4302;17154;0;HM002;varHpHeatPumpTR;Heat pump return temperature after condenser.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+error;0x4329;17193;0;HM041;varHpBackupPcuLocking;Heat pump boiler backup pcu Locking;uint8;(A) x 1;0;;0;255;1;;1;4
+error;0x434C;17228;0;;varHpOutdoorUnitErrorCode;Alarm codes when there is an alarm condition;int16;sgn(A.0 + B.1) x 1;0;;-4;32767;1;;1;3
+error;0x5000;20480;0;AC001;varApCtrHoursTotal;Hours that pcb was powered;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+error;0x500F;20495;0;AM012;varApStatus;Status of appliance;uint8;A;0;;0;254;;DeviceState;1;1
+error;0x5011;20497;0;AM014;varApSubStatus;Sub Status of appliance;uint8;A;0;;0;255;;DeviceSubStatus;1;1
+error;0x5016;20502;0;AM019;varApWaterPressure;actual Water pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;1;1
+error;0x501E;20510;0;AM027;varApTOutside;Outside temperature measure;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+error;0x50A9;20649;0;AM101;varApInternalSetpoint;Internal setpoint used for hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+error;0x5419;21529;1;CM190;varZoneTRoomSetpoint;Current room temperature  setpoint requested;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;60;0.10000000000000001;;1;1
+error;0x5601;22017;0;DM001;varDhwTankTemperature;Tank temperature DHW tank (bottom sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;4
+warning;0x4301;17153;0;HM001;varHpHeatPumpTF;Heat pump flow temperature after condenser;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+warning;0x4302;17154;0;HM002;varHpHeatPumpTR;Heat pump return temperature after condenser.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+warning;0x4329;17193;0;HM041;varHpBackupPcuLocking;Heat pump boiler backup pcu Locking;uint8;(A) x 1;0;;0;255;1;;1;4
+warning;0x434C;17228;0;;varHpOutdoorUnitErrorCode;Alarm codes when there is an alarm condition;int16;sgn(A.0 + B.1) x 1;0;;-4;32767;1;;1;3
+warning;0x5000;20480;0;AC001;varApCtrHoursTotal;Hours that pcb was powered;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+warning;0x500F;20495;0;AM012;varApStatus;Status of appliance;uint8;A;0;;0;254;;DeviceState;1;1
+warning;0x5011;20497;0;AM014;varApSubStatus;Sub Status of appliance;uint8;A;0;;0;255;;DeviceSubStatus;1;1
+warning;0x5016;20502;0;AM019;varApWaterPressure;actual Water pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;1;1
+warning;0x501E;20510;0;AM027;varApTOutside;Outside temperature measure;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+warning;0x50A9;20649;0;AM101;varApInternalSetpoint;Internal setpoint used for hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+warning;0x5419;21529;1;CM190;varZoneTRoomSetpoint;Current room temperature  setpoint requested;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;60;0.10000000000000001;;1;1
+warning;0x5601;22017;0;DM001;varDhwTankTemperature;Tank temperature DHW tank (bottom sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;4
+counter;0x4348;17224;0;HC000;varHpPumpRunHours;Counter of the operating hours of the condenser pump (also called Hp Pump);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;5;5
+counter;0x4349;17225;0;HC001;varHpPumpStarts;Total amount of condenser pump starts. (also called Hp Pump);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;5;5
+counter;0x4357;17239;0;;varHpCtrCompressorRunHours;Counter for the amount of compressor operation time in hours. This value cannot be reset.;uint16;(A.0 + B.1) x 1;0;31005;0;65535;1;;4;4
+counter;0x4358;17240;0;;varHpCtrToshibaIndoorPcbRunHours;Counter for the amount of Toshiba indoor PCB power-on time;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;4;4
+counter;0x5000;20480;0;AC001;varApCtrHoursTotal;Hours that pcb was powered;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x5024;20516;0;AM033;varApNextServiceIndication;Next service indication, the service indication after the upcoming.;uint8;A;0;;0;255;;TypeAbcServiceOrder;3;3
+counter;0x5040;20544;0;AC002;varApCtrServiceBurningHours;Number of hours that the appliance has been producing energy since last service;uint16;(A.0 + B.1) x 2;0;31005;0;131070;2;;2;2
+counter;0x5041;20545;0;AC003;varApCtrServiceOperatingHours;Number of hours since the previous servicing of the appliance;uint16;(A.0 + B.1) x 2;0;31005;0;131070;2;;2;2
+counter;0x5042;20546;0;AC004;varApCtrServiceBurnerStarts;Number of generator starts since the previous servicing.;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;2;2
+counter;0x5044;20548;0;AC005;varApChEnergyConsumption;Total energy consumed for production of central heat;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;1
+counter;0x5045;20549;0;AC006;varApDhwEnergyConsumption;Total energy consumed for production of domestic hot water.;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;4;4
+counter;0x5046;20550;0;AC007;varApCoolingEnergyConsumption;Used for MK1 trending;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;1
+counter;0x5057;20567;0;;varApCtrWatchdogResets;Counts the number of resets due to the watchdog timing out.;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;5;5
+counter;0x505C;20572;1;;varApCtrCanRxBufferOverrunOccurrence;Number of occurrence of the error RxBuffer Overrun error NO TRANSLATION NEEDED;uint16;(A.0 + B.1) x 1;0;;0;65534;1;;5;5
+counter;0x505C;20572;2;;varApCtrCanRxBufferOverrunOccurrence;Number of occurrence of the error RxBuffer Overrun error NO TRANSLATION NEEDED;uint16;(A.0 + B.1) x 1;0;;0;65534;1;;5;5
+counter;0x5065;20581;0;AC018;varApBackupEnergyConsumption;Total energy consumed by electrical or hydraulic backup;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;2
+counter;0x507A;20602;0;AC019;varApBackupEnergyDelivery;Energy delivered by Electrical or Hydraulic backup;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;2
+counter;0x5085;20613;0;AC008;varApChEnergyDelivery;Energy delivered for Central Heating (kWh);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;1
+counter;0x5086;20614;0;AC009;varApDhwEnergyDelivery;Energy delivered for Domestic Hot Water (kWh);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;4;4
+counter;0x5087;20615;0;AC010;varApCoolingEnergyDelivery;Energy delivered for cooling (kWh);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;1
+counter;0x5089;20617;0;;varApTotalEnergyDelivery;Total energy delivered in the current year (kWh);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;2;2
+counter;0x508A;20618;0;AC013;varApSeasonalPerformanceFactor;Seasonal performance factor;uint8;(A) x 0.1;0.0;;0;25.5;0.10000000000000001;;3;3
+counter;0x50AD;20653;0;AC026;varApCtrPumpRunHours;Counter Pump Run Hours;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x50AE;20654;0;AC027;varApCtrPumpStarts;Total amount of pump starts;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;1;1
+counter;0x50AF;20655;0;AC028;varApCtrBackup1Hours;Counter Backup 1 Hours;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;4;4
+counter;0x50B0;20656;0;AC029;varApCtrBackup2Hours;Counter Backup 2 Hours;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x50B1;20657;0;AC030;varApCtrBackup1Starts;Counter Backup 1 Start;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;1;1
+counter;0x50B2;20658;0;AC031;varApCtrBackup2Starts;Counter Backup 2 Start;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;1;1
+counter;0x50DA;20698;0;AC032;varApStandbyModeEnergyConsumption;Energy consumed by the appliance in standby mode;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;2
+counter;0x5300;21248;0;PC000;varChCtrHeatingBurnHours;Counter producer operating hours in central heating mode only;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x530B;21259;0;PC002;varChCtrBurnerStarts;Total number of generator starts. For heating and domestic hot water;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;1;1
+counter;0x530C;21260;0;PC003;varChCtrBurnHours;Total Number of hours that the appliance has been producing energy for central heating and domestic hot water.;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x530F;21263;0;PC005;varChCtrCoolingBurnHours;Counter producer operating hours in cooling mode only.;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;1;1
+counter;0x5608;22024;0;DC001;varDhwCtrTotalPowerConsumption;total producer power consumption used by Dhw;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31019;0;4294967294;1;;2;2
+counter;0x560A;22026;0;DC002;varDhwCtr3WayValveCycles;counter of number cycle Valve for Dhw;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;4;4
+counter;0x560B;22027;0;DC003;varDhwCtr3WayValveHours;3 way valve counter, hours in DHW position;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;4;4
+counter;0x560C;22028;0;DC004;varDhwCtrBurnerStartsDhw;Number of starts for domestic hot water;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;4;4
+counter;0x560D;22029;0;DC005;varDhwCtrBurnHours;Total Number of hours that the appliance has been producing energy for domestic hot water.;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;4;4
+counter;0x5614;22036;0;DC000;varDhwElectricalBackupRunHours;Counter of the operating hours of the electrical backup of the DHW tank;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31005;0;4294967294;1;;2;2
+counter;0x5615;22037;0;DC006;varDhwElectricalBackupStarts;Total amount of DHW electrical backup starts;uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;;0;4294967294;1;;2;2
+signal;0x4301;17153;0;HM001;varHpHeatPumpTF;Heat pump flow temperature after condenser;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+signal;0x4302;17154;0;HM002;varHpHeatPumpTR;Heat pump return temperature after condenser.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+signal;0x4303;17155;0;HM003;varHpHeatPumpSetpoint;System flow temperature setpoint including backups;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+signal;0x4304;17156;0;HM004;varHpBlockingInput1;Heat Pump BlockingInput1;uint8;A;0;;0;1;;OpenClose;1;1
+signal;0x4305;17157;0;HM005;varHpBlockingInput2;Heat Pump BlockingInput2;uint8;A;0;;0;1;;OpenClose;1;1
+signal;0x4306;17158;0;HM006;varHpHumiditySensor;Relative humidity measured by the humidity sensor;int16;sgn(A.0 + B.1) x 1;0;31014;0;100;1;;1;1
+signal;0x4307;17159;0;HM007;varHpUnitFailure;Heat Pump Error State;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x4308;17160;0;HM008;varHpCompressorState;Indication if  the compressor is operating or not,;uint8;A;0;;0;255;;OffOn;1;1
+signal;0x4309;17161;0;HM009;varHpDefrost;Heat Pump Defrost;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x430A;17162;0;HM010;varHp5VFeedback;Heat Pump 5V feedback;int16;sgn(A.0 + B.1) x 0.1;0.0;31020;0;6;0.10000000000000001;;4;4
+signal;0x430C;17164;0;HM012;varHpBackUp1State;Indication if the first stage of backup is ON or OFF;uint8;A;0;;0;255;;OffOn;1;1
+signal;0x430D;17165;0;HM013;varHpBackUp2State;Indication if the second stage of backup is ON or OFF;uint8;A;0;;0;255;;OffOn;1;1
+signal;0x430E;17166;0;HM014;varHpHeatCool4wv;Indication if the 4 way valve of the thermodynamic circuit is in heating or cooling position;uint8;A;0;;1;2;;currentHeatingMode;4;4
+signal;0x4310;17168;0;HM016;varHpElecEnergyMeter;Electric energy meter;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;1;1
+signal;0x4314;17172;0;HM020;varHpHeatPumpFlowTempAveraged;Heat Pump Flow Temp Averaged;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;3;3
+signal;0x431E;17182;0;HM030;varHpCompDemand;Status if the compressor is in starting request or not.;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x431F;17183;0;HM031;varHpCOPCalculated;Instantaneous COP calculated by Hybrid application;uint16;(A.0 + B.1) x 0.001;0.000;;0;1;0.001;;3;3
+signal;0x4320;17184;0;HM032;varHpCOPThreshold;COP threshold calculated by Hybrid;uint16;(A.0 + B.1) x 0.001;0.000;;0;1;0.001;;3;3
+signal;0x4321;17185;0;HM033;varHpCoolingSetpoint;Flow temperature setpoint in cooling mode;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;40;0.01;;1;1
+signal;0x4322;17186;0;HM034;varHpBackupPcuFlowTemp;Heat pump boiler backup pcu flow temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;4;4
+signal;0x4323;17187;0;HM035;varHpBackupPcuReturnTemp;Heat pump boiler backup pcu return temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;4;4
+signal;0x4324;17188;0;HM036;varHpBackupPcuDhwTemp;Heat pump boiler backup pcu dhw temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;4;4
+signal;0x4325;17189;0;HM037;varHpBackupPcuInternalSetpoint;Heat pump boiler backup pcu internal temperature setpoint;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+signal;0x4326;17190;0;HM038;varHpBackupPcuStatus;Heat pump boiler backup pcu status;uint8;(A) x 1;0;;0;250;1;;4;4
+signal;0x4327;17191;0;HM039;varHpBackupPcuSubStatus;Heat pump boiler backup pcu Sub Status;uint8;(A) x 1;0;;0;255;1;;4;4
+signal;0x4328;17192;0;HM040;varHpBackupPcuOutputPower;Heat pump boiler backup pcu output power;uint8;(A) x 1;0;31014;0;100;1;;4;4
+signal;0x4329;17193;0;HM041;varHpBackupPcuLocking;Heat pump boiler backup pcu Locking;uint8;(A) x 1;0;;0;255;1;;4;4
+signal;0x432A;17194;0;HM042;varHpBackupPcuBLocking;Heat pump boiler backup pcu Blocking;uint8;(A) x 1;0;;0;255;1;;4;4
+signal;0x432E;17198;0;HM046;varHp5VOutput;Heat pump 5V signal output setpoint;uint8;(A) x 0.1;0.0;31020;0;6;0.10000000000000001;;4;4
+signal;0x432F;17199;0;HM047;varHpBackupPcuServiceNotification;Heat pump PCU back up Service Notification;uint8;(A) x 1;0;;0;255;1;;4;4
+signal;0x4330;17200;0;HM048;varHpBackupPcuIonizationCurrent;Heat pump boiler backup pcu ionization current;uint8;(A) x 0.1;0.0;31018;0;25.5;0.10000000000000001;;4;4
+signal;0x4331;17201;0;HM049;varHpBackupPcuFanSpeed;Heat pump boiler backup pcu fan speed;uint16;(A.0 + B.1) x 1;0;31009;0;65535;1;;4;4
+signal;0x4332;17202;0;HM050;varHpBackupPcuConfiguration;Heat pump boiler backup pcu configuration;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;4;4
+signal;0x4333;17203;0;HM051;varHpBackupPcuPressure;Heat pump boiler backup pcu pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;4;4
+signal;0x4337;17207;0;HM054;varHpTimeBetweenStage;Heat Pump temporisation timer before activating next generator stage;uint16;(A.0 + B.1) x 1;0;31004;0;65535;1;;1;1
+signal;0x4338;17208;0;HM056;varHpTempoBetweenStageCalculated;Heat pump calculated temporisation before activating next back up stage;uint16;(A.0 + B.1) x 1;0;31004;0;65535;1;;1;1
+signal;0x4339;17209;0;HM057;varHpNbStageAvailable;Heat pump number of generator stage available;uint8;(A) x 1;0;;0;255;1;;1;1
+signal;0x433A;17210;0;HM058;varHpNbStageRequired;heat pump number of generator stages required;uint8;(A) x 1;0;;0;255;1;;1;1
+signal;0x4340;17216;0;HM062;varHpCompressorCurrent;The actual current of the ODU as measured by the ODU, is used in the ODU unit to protect against too high current.;uint16;(A.0 + B.1) x 0.1;0.0;31033;0;30;0.10000000000000001;;3;3
+signal;0x4346;17222;0;HM069;varHpPumpSpeed;Current speed of the condenser pump;uint16;(A.0 + B.1) x 0.1;0.0;31014;0;100;0.10000000000000001;;5;5
+signal;0x4347;17223;0;HM070;varHpPumpRunning;Indication if the condenser pump is ON or OFF;uint8;A;0;;0;1;;OffOn;5;5
+signal;0x434A;17226;0;;varHpOutdoorUnitOperatingMode;Operation mode of the outdoor unit. In the current control scheme only the HEAT (1) and COOL (2) modes are used. The current default is HEAT (1).;uint8;A;0;;0;2;;currentHeatingMode;4;4
+signal;0x434B;17227;0;;varHpOutdoorUnitModulationLevel;Control the modulation level of the outdoor unit. The different modulation levels are mapped to values between 64-254 for heating, and between 64-224 in cooling mode. The values correspond to compressor speeds, the relation between this value and the compressor speed is described in: XXX;uint8;(A) x 1;0;;0;255;1;;4;4
+signal;0x434C;17228;0;;varHpOutdoorUnitErrorCode;Alarm codes when there is an alarm condition;int16;sgn(A.0 + B.1) x 1;0;;-4;32767;1;;3;3
+signal;0x434D;17229;0;;varHpIndoorUnitHeatExchangerTemperature;Temperature measured by the NTC placed on the heat exchanger of the indoor unit on the liquid line;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x434E;17230;0;;varHpOutdoorUnitHeatExchangerTemperature;Temperature of the evaporator of the ODU. This sensor is mounted on the outdoor heat exchanger.  This sensor value is used by the internal Toshiba controls for determining when to defrost and for controlling the electronic expansion valve. This controls cannot be influenced by the IDU.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x434F;17231;0;;varHpCompressorSuctionTemperature;Temperature measured on the refrigerant line on the compressor suction line. This value is used in the internal controls of the ODU and is important in controlling the electronic expansion valve. The IDU doesn't use this value for controls.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x4350;17232;0;;varHpCompressorDischargeTemperature;Temperature measured on the refrigerant line of the compressor discharge line. This value is used for safety features of the ODU, the IDU doesn't actively use this value for controls.;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x4351;17233;0;;varHpOutdoorUnitCoilTemperature;Temperature measure on the liquid refrigerant line;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x4352;17234;0;;varHpOutdoorUnitlimitPressureExceeded;Current value of the pressure switch in the ODU, when active the maximum pressure has been exceeded;uint8;A;0;;0;1;;YesNo;4;4
+signal;0x4353;17235;0;;varHpCompressorFrequency;The current actual compressor speed measured in Hz. The actual minimum and maximum values are different depending on the ODU.;uint8;(A) x 1;0;31028;0;255;1;;3;3
+signal;0x4354;17236;0;;varHpOutdootUnitFanSpeed;Current speed of the fan of the ODU, this value varies based on the ODU and the outdoor conditions;uint16;(A.0 + B.1) x 1;0;31009;0;810;1;;4;4
+signal;0x4355;17237;0;;varHpOutdoorUnitElectronicValvePosition;This register depicts the position of the Pulse Motor Valve (PMV) of the electronic expansion valve. The EEV is controlled independantly by the ODU.;uint16;(A.0 + B.1) x 1;0;31016;0;810;1;;3;4
+signal;0x4356;17238;0;;varHpOutdoorUnitProtectFunction;"This register shows the active protect functions, if active these protect functions may prevent the ODU running at the requested speed. When protect functions are active for too long the ODU may be switched off. 
+Current protection: Active when current draw is too high, the maximum depends on the type of ODU.
+TD protection: Active when the discharge temperature is too high, the maximum depends on the type of ODU.
+TC protection: Active when the condenser temperature is too high, the maximum depends on the type of ODU.";uint8;(A) x 1;0;;0;255;1;;3;3
+signal;0x4359;17241;0;;varHpOutdoorUnitReturnTemperature;Temperature sensor mounted on the return flow of the heat pump;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;3;3
+signal;0x435A;17242;0;;varHpToshibaModbusInterfaceSoftware;Software version of the ModBus kit;uint16;(A.0 + B.1) x 1;0;;0;65535;1;;4;4
+signal;0x5001;20481;0;AM001;varApDhwActive;HMI can detect if DHW mode is active, HMI bit field status output.;uint8;A;0;;0;1;;OffOn;2;2
+signal;0x5002;20482;0;AM002;varApLowNoise;Low Noise Mode state;uint8;A;0;;0;255;;SilentMode;1;1
+signal;0x5007;20487;0;AP078;varApOutsideSensorConnected;Outside sensor Connected to the device;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x500C;20492;0;AM010;varApPumpSpeed;Current pump speed;uint16;(A.0 + B.1) x 0.1;0.0;31014;0;100;0.10000000000000001;;2;2
+signal;0x500D;20493;0;BM013;varApForceDeair;Force De-air Mode;uint8;A;0;;0;255;;YesNo;5;5
+signal;0x500E;20494;0;AM011;varApServiceRequired;Service is required bit;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x500F;20495;0;AM012;varApStatus;Status of appliance;uint8;A;0;;0;254;;DeviceState;1;1
+signal;0x5011;20497;0;AM014;varApSubStatus;Sub Status of appliance;uint8;A;0;;0;255;;DeviceSubStatus;1;1
+signal;0x5012;20498;0;AM015;varApSystemPumpRunning;Pump running yes /no;uint8;A;0;;0;255;;InactiveActive;1;1
+signal;0x5013;20499;0;AM016;varApTflow;Flow temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;1;1
+signal;0x5015;20501;0;AM018;varApTreturn;Return temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;3;3
+signal;0x5016;20502;0;AM019;varApWaterPressure;actual Water pressure;uint8;(A) x 0.1;0.0;31008;0;25.5;0.10000000000000001;;1;1
+signal;0x5018;20504;0;AM021;varApHdHeatDemand;external HD heat demand (flag). Unclear, RBS should not be owner;uint8;(A) x 1;0;;0;255;1;;3;3
+signal;0x5019;20505;0;AM022;varApHdOnOffDemand;on / off heat demand (flag);uint8;A;0;;0;255;;OffOn;3;3
+signal;0x501B;20507;0;AM024;varApPowerActual;Actual relative power produced;uint16;(A.0 + B.1) x 0.01;0.00;31014;0;655.35000000000002;0.01;;3;3
+signal;0x501E;20510;0;AM027;varApTOutside;Outside temperature measure;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+signal;0x5025;20517;1;;varApExternalHdLBus;External heat demand input for L-bus for debug purposes;array;;;;;;;;3;3
+signal;0x5028;20520;0;AM037;varAp3wayValveStatus;3 way valve status;uint8;A;0;;0;255;;CH_DHW;4;4
+signal;0x502E;20526;1;;varApStatusFrostProtectionActive;frost protection active;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x502E;20526;2;;varApStatusComfortModeActive;comfort mode active, replaced the Dhw time program;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x502E;20526;3;;varApStatusDhwBlockActive;dhw block active;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x502E;20526;4;;varApStatusAntiLegionellaActive;anti legionella active, replaced by dhw program;uint8;A;0;;0;1;;OffOn;3;3
+signal;0x502E;20526;5;;varApStatusDHWheatDemandActive;dhw heat demand active;uint8;A;0;;0;255;;YesNo;1;1
+signal;0x502E;20526;6;;varApStatusDHWenableInput;DHW enable input;uint8;A;0;;0;255;;YesNo;3;3
+signal;0x502E;20526;7;;varApStatusCHenableInput;CH enable input;uint8;A;0;;0;255;;YesNo;3;3
+signal;0x5031;20529;0;AM040;varApControlTemp;Current Temp used for control;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-327.68000000000001;327.67000000000002;0.01;;1;1
+signal;0x5039;20537;1;AM045;varApSensorPresentWaterPressure;Water sensor present?;uint8;A;0;;0;1;;YesNo;2;2
+signal;0x5048;20552;0;;varApCurrentOrUpcomingServiceNotification;Current or upcoming service notification 1=A, 2=B, 3=C, 4=Custom, 5=D;uint8;A;0;;0;255;;TypeServiceUpcoming;3;3
+signal;0x504E;20558;0;AM046;varApToutsideInternetTemperature;Outside temperature received from an internet source;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;3
+signal;0x5058;20568;0;;varApToutsideWiredTemperature;Temperature measured by a wired outside sensor;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-50;60;0.01;;3;3
+signal;0x5059;20569;0;;varApToutsideWirelessTemperature;Temperature measured by a wireless outside sensor;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-50;60;0.01;;3;3
+signal;0x505A;20570;0;;varApToutsideTypeSensorConnectionUsed;Which type of outdoor sensor connection is used: wired , wireless , internet;uint8;A;0;;1;4;;typeOutdoorSensorConnection;3;3
+signal;0x505B;20571;0;AM047;varApActualProducerPower;Signal used to capture actual power calculation. .;uint32;(A.0 + B.1 + C.2 + D.3) x 0.001;0.000;31019;0;4294967.2939999998;0.001;;3;3
+signal;0x506A;20586;1;;varApToutsideExternalTypeSensorConnection;The received connection type (wired, wireless or internet) of an outside sensor not connected to this board.;uint8;A;0;;0;4;;typeOutdoorSensorConnection;2;2
+signal;0x506A;20586;2;;varApToutsideExternalTypeSensorConnection;The received connection type (wired, wireless or internet) of an outside sensor not connected to this board.;uint8;A;0;;0;4;;typeOutdoorSensorConnection;2;2
+signal;0x5080;20608;0;;varStatePathCountNoEntires;Number of statemachines reported by object Used for automatic test cases;uint8;(A) x 1;0;;0;255;1;;3;3
+signal;0x5080;20608;1;;varStatePathMainStm;Main statemachine state representation Used for automatic test cases;array;;;;;;;;3;3
+signal;0x5080;20608;2;;varStatePathBurnerStartStm;Burner statemachine state representation Used for automatic test cases;array;;;;;;;;3;3
+signal;0x5083;20611;0;AM056;varApFlowmeter;Flow rate;uint16;(A.0 + B.1) x 0.01;0.00;31013;0;655.35000000000002;0.01;;1;1
+signal;0x5088;20616;0;;varApTotalEnergyConsumption;Total energy consumed in the current year (kWh);uint32;(A.0 + B.1 + C.2 + D.3) x 1;0;31024;0;4294967294;1;;1;1
+signal;0x50A1;20641;0;;varApPowerActualU8;Actual relative power produced for PDO output;uint8;(A) x 1;0;31014;0;100;1;;3;3
+signal;0x50A2;20642;0;;varApToutsideAverageShortWindow;3 minute average of outside sensor temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;2;2
+signal;0x50A3;20643;0;;varApToutsideAverageLongWindow;2 hour average of outside sensor temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;3;3
+signal;0x50A7;20647;0;AM091;varApSeasonMode;Seasonal mode active (summer /  winter);uint8;A;0;;0;3;;SeasonMode;1;1
+signal;0x50A9;20649;0;AM101;varApInternalSetpoint;Internal setpoint used for hot water production;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+signal;0x50AC;20652;0;;varApChimneyModeStatus;Current mode Chimney sweep function;uint8;A;0;;0;4;;ChimneySweepMode;3;3
+signal;0x5302;21250;0;PM002;varChSetpoint;Central heating setpoint of the appliance;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
+signal;0x5404;21508;1;CM030;varZoneTRoom;Current room temperature for zone;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;50;0.10000000000000001;;1;1
+signal;0x5406;21510;1;CM050;varZonePumpRunning;Zone pump is running;uint8;A;0;;0;255;;YesNo;3;3
+signal;0x5408;21512;1;CM070;varZoneTemperatureSetpoint;Current flow temperature setpoint;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;2;2
+signal;0x5410;21520;1;CM120;varZoneCurrentMode;Current running mode on the Zone;uint8;A;0;;0;255;;ModeZoneWorking;1;1
+signal;0x5413;21523;1;CM130;varZoneCurrentActivities;Current active zone activity (Anti Frost/Holiday, Reduced, Comfort, Anti-Legionella);uint8;A;0;;0;255;;ZoneCurrentActivity;1;1
+signal;0x5414;21524;1;CM140;varZoneOtPresent;Opentherm controller connected to the zone;uint8;A;0;;0;1;;YesNo;2;2
+signal;0x5415;21525;1;CM150;varZoneHdOnOffDemand;On off heat demand acitve;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x5416;21526;1;CM160;varZoneModulatedHeatDemandPresent;Modulated Heat demand is present;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x5417;21527;1;CM170;varZoneOtSmartPowerAvailable;Zone Opentherm Smart Power Available;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x5418;21528;1;CM180;varZoneRuPresent;Presence of RU;uint8;A;0;;0;1;;YesNo;3;3
+signal;0x5419;21529;1;CM190;varZoneTRoomSetpoint;Current room temperature  setpoint requested;int16;sgn(A.0 + B.1) x 0.1;0.0;31001;0;60;0.10000000000000001;;1;1
+signal;0x541D;21533;1;CM200;varZoneCurrentHeatingMode;Current mode that the zone is functioning in.;uint8;A;0;;0;2;;currentHeatingMode;2;2
+signal;0x541F;21535;1;;varZoneOverHeatActive;Over heat Function Active;uint8;A;0;;0;1;;OffOn;3;3
+signal;0x542E;21550;1;CM210;varZoneTOutside;Zone Outside Temperature;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;1;1
+signal;0x5430;21552;1;CM230;varZoneToutsideAverageLongWindow;Zone Temperature outside long window average;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-70;70;0.01;;3;3
+signal;0x5436;21558;1;CM280;varZoneCalculatedRoomTemperatureSetpoint;Internal Room Temperature Set point calculated by the Room Temperature Control (RTC);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;0;70;0.01;;3;3
+signal;0x5600;22016;0;DM000;varDhwElectricalBackupState;Indication if Electrical backup of the DHW tank is ON or OFF;uint8;A;0;;0;1;;OffOn;4;4
+signal;0x5601;22017;0;DM001;varDhwTankTemperature;Tank temperature DHW tank (bottom sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;4;4
+signal;0x5602;22018;0;DM002;varDhwFlowSpeed;actual dhw combi flow rate;uint16;(A.0 + B.1) x 0.1;0.0;31013;0;6553.5;0.10000000000000001;;5;5
+signal;0x5603;22019;0;DM003;varDhwFlowSwitchSignal;Status Domestic Hot Water flow switch signal;uint8;A;0;;0;1;;OpenClose;5;5
+signal;0x5604;22020;0;DM004;varDhwFlowTempSetpoint;Flow temperature setpoint  Domestic Hot Water;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;4;4
+signal;0x5605;22021;0;DM005;varDhwSolarTemp;Current temperature of solar tank;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-25;150;0.01;;5;5
+signal;0x5606;22022;0;DM006;varDhwTankTemperatureTop;Tank temperature DHW tank (Top sensor);int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-20;120;0.01;;4;4
+signal;0x5607;22023;0;DM007;varDhwTasStatus;Status of the anti corrosion protection (TAS) of the Domestic Hot Water tank;uint8;A;0;;0;1;;OffOn;5;5
+signal;0x5609;22025;0;DM008;varDhwOutTemp;Temperature sensor for the tap temperature leaving the boiler;int16;sgn(A.0 + B.1) x 0.01;0.00;31001;-25;150;0.01;;4;4
+signal;0x560F;22031;1;DM019;varZoneDhwPrimaryCurrentActivities;Dhw primary Current Activities (Anti Frost/Holiday, Reduced/Eco, Comfort, Anti-Legionella);uint8;A;0;;0;3;;ZoneCurrentActivity;1;1
+signal;0x5610;22032;0;DM029;varDHWTemperatureSetpoint;temperature to be achieved inside the tank;uint16;(A.0 + B.1) x 0.01;0.00;31001;0;120;0.01;;1;1
