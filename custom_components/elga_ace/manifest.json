@@ -1,15 +1,18 @@
 {
   "domain": "elga_ace",
   "name": "Remeha Elga Ace Bluetooth",
+  "after_dependencies": ["esphome"],
   "bluetooth": [
     {"local_name": "GTW*", "connectable": true},
     {"local_name": "EHC-*", "connectable": true}
   ],
-  "codeowners": [],
+  "codeowners": ["@wouterokkerse"],
   "config_flow": true,
   "dependencies": ["bluetooth"],
+  "documentation": "https://github.com/wouterokkerse/remeha-bluetooth#readme",
   "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/wouterokkerse/remeha-bluetooth/issues",
   "requirements": ["bleak-retry-connector==4.7.1"],
-  "version": "0.1.0"
+  "version": "0.2.1"
 }

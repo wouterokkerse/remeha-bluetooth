@@ -20,6 +20,30 @@ def bluez_path(device: BLEDevice) -> str | None:
     return None
 
 
+def proxy_source(device: BLEDevice) -> str | None:
+    """Identify an active remote Bluetooth transport without requiring BlueZ."""
+    if bluez_path(device):
+        return None
+    details = device.details
+    source = details.get("source") if isinstance(details, dict) else None
+    return source.upper() if isinstance(source, str) and source else None
+
+
+def connected_device(client, fallback: BLEDevice) -> BLEDevice:
+    """Use HA's actual selected route, which can differ from the advertisement."""
+    selected = getattr(client, "_connected_device", None)
+    if isinstance(selected, BLEDevice):
+        return selected
+    backend = getattr(client, "_backend", None)
+    selected = getattr(backend, "_ble_device", None)
+    if isinstance(selected, BLEDevice):
+        return selected
+    path = getattr(backend, "_device_path", None)
+    if isinstance(path, str) and path.startswith("/org/bluez/"):
+        return BLEDevice(fallback.address, fallback.name, {"path": path})
+    return fallback
+
+
 def validate_pin(pin: str) -> bool:
     """Keep leading zeroes while validating a Bluetooth numeric passkey."""
     return bool(re.fullmatch(r"[0-9]{1,6}", pin))

@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 import support
 
 from custom_components.elga_ace import config_flow
-from custom_components.elga_ace.protocol import PairingError, ProtocolError, UnsupportedAdapter
+from custom_components.elga_ace.protocol import PairingError, ProtocolError, ProxyPairingRequired, UnsupportedAdapter
 from test_client import device
 
 
@@ -16,7 +16,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         self.flow.hass = support.FakeHass()
         self.flow.context = {}
         self.info = SimpleNamespace(address=device().address, name="GTW-test", connectable=True)
-        self.local_patch = patch.object(config_flow, "local_device", return_value=device())
+        self.local_patch = patch.object(config_flow, "connectable_device", return_value=device())
         self.scan_patch = patch.object(config_flow.bluetooth, "async_discovered_service_info", return_value=[self.info])
         self.active_patch = patch.object(config_flow.bluetooth, "async_request_active_scan", new=AsyncMock())
         self.local_patch.start()
@@ -50,10 +50,19 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
             result = await self.flow.async_step_user()
         self.assertEqual(result["reason"], "no_devices_found")
 
-    async def test_remote_only_message_explains_pairing_limit(self):
-        with patch.object(config_flow, "local_device", return_value=None):
+    async def test_out_of_range_device_is_not_offered(self):
+        with patch.object(config_flow, "connectable_device", return_value=None):
             result = await self.flow.async_step_user()
-        self.assertEqual(result["reason"], "local_adapter_required")
+        self.assertEqual(result["reason"], "no_devices_found")
+
+    async def test_proxy_only_discovery_is_offered(self):
+        remote = device()
+        remote.details = {"source": "11:22:33:44:55:66"}
+        with patch.object(config_flow, "connectable_device", return_value=remote):
+            result = await self.flow.async_step_user()
+            self.assertEqual(result["type"], "form")
+            result = await self.flow.async_step_bluetooth(self.info)
+            self.assertEqual(result["step_id"], "pair")
 
     async def test_invalid_name_and_pin_do_not_start_pairing(self):
         self.flow._address = self.info.address
@@ -87,7 +96,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["data"]["pin"], "000123")
 
     async def test_error_is_returned_to_form_without_saving_entry(self):
-        for error, expected in ((PairingError(), "invalid_auth"), (ProtocolError(), "handshake_failed"), (UnsupportedAdapter(), "local_adapter_required")):
+        for error, expected in ((PairingError(), "invalid_auth"), (ProtocolError(), "handshake_failed"), (ProxyPairingRequired(), "proxy_pairing_required"), (UnsupportedAdapter(), "unsupported_adapter")):
             with self.subTest(error=type(error).__name__):
                 result = await self.complete_validation(self.reader(error))
                 self.assertEqual(result["next_step_id"], "pair")

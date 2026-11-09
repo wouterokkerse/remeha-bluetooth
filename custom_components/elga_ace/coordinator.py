@@ -6,10 +6,10 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from functools import partial
 from time import monotonic
 
 from bleak.exc import BleakError
-from homeassistant.components import bluetooth
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ADDRESS, CONF_NAME, CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant
@@ -22,21 +22,11 @@ from .const import (
     FAST_REGISTERS, POLL_BUDGET, REGISTER_RETRY_DELAY, REGISTER_TIMEOUT,
     SLOW_REFRESH_INTERVAL,
 )
-from .pairing import bluez_path
 from .protocol import DeviceUnavailable, ElgaError, PairingError, RegisterReadError
 from .registers import Register
+from .transport import async_pair_gateway, connectable_device
 
 _LOGGER = logging.getLogger(__name__)
-
-
-def local_device(hass: HomeAssistant, address: str):
-    """Prefer local BlueZ even if a proxy has the stronger advertisement."""
-    devices = bluetooth.async_scanner_devices_by_address(hass, address, connectable=True)
-    for candidate in devices:
-        if bluez_path(candidate.ble_device):
-            return candidate.ble_device
-    candidate = bluetooth.async_ble_device_from_address(hass, address, connectable=True)
-    return candidate if candidate is not None and bluez_path(candidate) else None
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,7 +49,10 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
         )
         self.address = entry.data[CONF_ADDRESS]
         self.registers = registers
-        self.client = ElgaClient(lambda: local_device(hass, self.address), entry.data[CONF_PIN])
+        self.client = ElgaClient(
+            lambda: connectable_device(hass, self.address), entry.data[CONF_PIN],
+            pair_callback=partial(async_pair_gateway, hass),
+        )
         self._batch_size = entry.options.get(CONF_SLOW_BATCH_SIZE, DEFAULT_SLOW_BATCH_SIZE)
         by_address = {(register.index, register.subindex): register for register in registers}
         self._fast = tuple(by_address[key] for key in FAST_REGISTERS)
@@ -96,6 +89,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
             await self.client.async_connect()
             deadline = monotonic() + POLL_BUDGET
             data = dict(self.data)
+            read_timeout = 5.0 if getattr(self.client, "is_remote", False) else REGISTER_TIMEOUT
             attempted = 0
             successful = 0
             for register in self._fast:
@@ -103,7 +97,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
                 if remaining <= 0:
                     break
                 attempted += 1
-                successful += await self._read(register, data, min(REGISTER_TIMEOUT, remaining))
+                successful += await self._read(register, data, min(read_timeout, remaining))
             visited = 0
             slow_reads = 0
             while self._slow and visited < len(self._slow) and slow_reads < self._batch_size:
@@ -119,7 +113,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
                     continue
                 attempted += 1
                 slow_reads += 1
-                successful += await self._read(register, data, min(REGISTER_TIMEOUT, remaining))
+                successful += await self._read(register, data, min(read_timeout, remaining))
             if not self.client.connected:
                 raise DeviceUnavailable("Gateway disconnected during polling")
             if attempted and not successful and not data:

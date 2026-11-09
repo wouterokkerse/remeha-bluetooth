@@ -1,0 +1,24 @@
+esphome:
+  min_version: 2026.10.2
+
+external_components:
+  - source:
+      type: local
+      path: elga-ace-components
+    components: [elga_ace_pairing]
+
+esp32_ble:
+  io_capability: keyboard_only
+
+elga_ace_pairing:
+  id: elga_pairing
+
+api:
+  actions:
+    - action: elga_ace_set_pairing_code
+      variables:
+        address: string
+        pin: string
+      then:
+        - lambda: |-
+            id(elga_pairing).set_pairing_code(address, pin);
