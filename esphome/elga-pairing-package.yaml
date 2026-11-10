@@ -1,10 +1,14 @@
+# Lets Home Assistant hand the Elga PIN to this proxy for a two-minute,
+# MAC-bound pairing window. Nothing is stored on the device.
 esphome:
   min_version: 2026.10.2
 
 external_components:
   - source:
-      type: local
-      path: elga-ace-components
+      type: git
+      url: https://github.com/wouterokkerse/remeha-bluetooth
+      ref: main
+      path: esphome/elga-ace-components
     components: [elga_ace_pairing]
 
 esp32_ble:

@@ -33,20 +33,6 @@ def proxy_runtime(hass: HomeAssistant, source: str):
     raise ProxyPairingRequired("The selected ESPHome proxy is not loaded")
 
 
-def proxy_device_name(hass: HomeAssistant, source: str) -> str | None:
-    """ESPHome node name of the proxy with this Bluetooth MAC, if it is set up."""
-    for entry in hass.config_entries.async_entries("esphome"):
-        if entry.data.get("bluetooth_mac_address", "").upper() != source.upper():
-            continue
-        if name := entry.data.get("device_name"):
-            return name
-        runtime = getattr(entry, "runtime_data", None)
-        info = getattr(runtime, "device_info", None)
-        if name := getattr(info, "name", None):
-            return name
-    return None
-
-
 def pairing_action(runtime):
     """Only send credentials to the explicitly named companion action."""
     for action in runtime.services.values():

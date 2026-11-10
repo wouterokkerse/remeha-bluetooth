@@ -55,8 +55,7 @@ class PackagingTests(unittest.TestCase):
             for name in (
                 "__init__.py", "manifest.json", "config_flow.py", "sensor.py",
                 "binary_sensor.py", "client.py", "protocol.py", "pairing.py",
-                "transport.py", "coordinator.py", "registers.py", "esphome_setup.py",
-                "esphome/elga-pairing.yaml",
+                "transport.py", "coordinator.py", "registers.py",
                 "register_catalog.json", "strings.json", "translations/en.json",
             ):
                 with self.subTest(file=name):

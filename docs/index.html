@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elga Proxy Installer</title>
+  <script type="module" src="https://unpkg.com/esp-web-tools@10.1.0/dist/web/install-button.js?module"></script>
+  <style>
+    :root { color-scheme: light dark; --bg: #fafafa; --fg: #1d1d1f; --muted: #555; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #161618; --fg: #f2f2f2; --muted: #aaa; } }
+    body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 system-ui, sans-serif; }
+    main { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
+    h1 { font-size: 1.6rem; margin: 0 0 8px; }
+    p, li { color: var(--muted); }
+    ol { padding-left: 1.2em; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Elga Ace Bluetooth proxy</h1>
+  <p>A standard ESPHome Bluetooth proxy that can also pair with a Remeha Elga Ace gateway.
+     You only need to do this once per ESP32.</p>
+  <ol>
+    <li>Connect an ESP32 with a USB cable and use Chrome or Edge on a computer.</li>
+    <li>Click <strong>Connect</strong>, pick the serial port, install, then enter your Wi-Fi details.</li>
+    <li>Home Assistant discovers the proxy: add it under Settings → Devices &amp; services.</li>
+    <li>Add the Elga Ace integration and type the appliance PIN. That's it.</li>
+  </ol>
+  <esp-web-install-button manifest="firmware/manifest.json"></esp-web-install-button>
+</main>
+</body>
+</html>

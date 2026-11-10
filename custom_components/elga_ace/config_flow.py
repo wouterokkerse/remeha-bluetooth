@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from pathlib import Path
+from functools import partial
 from typing import Any
 
 try:
@@ -24,9 +24,8 @@ from .const import (
     CONF_PIN, CONF_SLOW_BATCH_SIZE, DEFAULT_NAME, DEFAULT_SCAN_INTERVAL,
     DEFAULT_SLOW_BATCH_SIZE, DOMAIN,
 )
-from .transport import connectable_device, proxy_device_name
-from .esphome_setup import ProxyConfigError, ProxySetupResult, configure_proxy
-from .pairing import is_proxy, proxy_source, validate_pin
+from .transport import async_pair_gateway, connectable_device
+from .pairing import validate_pin
 from .protocol import (
     DeviceUnavailable, PairingError, ProtocolError, ProxyPairingRequired,
     RegisterReadError, UnsupportedAdapter,
@@ -53,8 +52,6 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         self._connect_task: asyncio.Task[str | None] | None = None
         self._connect_error: str | None = None
         self._existing_entry: ConfigEntry | None = None
-        self._proxy_name: str | None = None
-        self._proxy_result: ProxySetupResult | None = None
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Select a nearby device from HA's shared scanner, not a private scan."""
@@ -101,78 +98,36 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         return await self.async_step_pair()
 
     async def async_step_pair(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Ask for a name and, for local adapters only, a pairing code."""
+        """Ask for a name and the appliance PIN (local adapter or Elga proxy)."""
         errors = {}
         if self._connect_error:
             errors["base"], self._connect_error = self._connect_error, None
         if user_input is not None:
             name = user_input[CONF_NAME].strip()
             pin = user_input.get(CONF_PIN, "").strip()
-            device = connectable_device(self.hass, self._address)
-            proxy = is_proxy(device)
             if not name or len(name) > 80:
                 errors[CONF_NAME] = "invalid_name"
-            elif (pin or not proxy) and not validate_pin(pin):
+            elif not validate_pin(pin):
                 errors[CONF_PIN] = "invalid_pin"
             else:
                 self._settings = {CONF_ADDRESS: self._address, CONF_NAME: name, CONF_PIN: pin}
                 self.context["title_placeholders"] = {"name": name}
-                if not (proxy and pin):
-                    return await self.async_step_connect()
-                if error := await self._async_write_proxy_config(device, pin):
-                    errors["base"] = error
-                elif self._proxy_result and self._proxy_result.changed:
-                    return await self.async_step_flash()
-                else:
-                    return await self.async_step_connect()
+                return await self.async_step_connect()
         name = self._settings.get(CONF_NAME, self._existing_entry.title if self._existing_entry else DEFAULT_NAME)
         return self.async_show_form(
             step_id="pair", errors=errors,
-            description_placeholders={
-                "address": self._address or "",
-                "proxy": self._proxy_name or "?",
-                "esphome_dir": self.hass.config.path("esphome"),
-            },
+            description_placeholders={"address": self._address or ""},
             data_schema=vol.Schema({
                 vol.Required(CONF_NAME, default=name): selector.TextSelector(),
-                vol.Optional(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
+                vol.Required(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
             }),
         )
 
-    async def _async_write_proxy_config(self, device, pin: str) -> str | None:
-        """Put the PIN and pairing package into the proxy's ESPHome YAML."""
-        source = proxy_source(device) if device is not None else None
-        self._proxy_name = proxy_device_name(self.hass, source) if source else None
-        if not self._proxy_name:
-            return "proxy_not_found"
-        try:
-            self._proxy_result = await self.hass.async_add_executor_job(
-                configure_proxy, Path(self.hass.config.path("esphome")),
-                self._proxy_name, self._address, pin,
-            )
-        except ProxyConfigError as error:
-            return error.reason
-        except OSError:
-            _LOGGER.exception("Could not write the ESPHome proxy configuration")
-            return "proxy_write_failed"
-        return None
-
-    async def async_step_flash(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Wait until the user installed the updated proxy firmware."""
-        if user_input is not None:
-            return await self.async_step_connect()
-        result = self._proxy_result
-        return self.async_show_form(
-            step_id="flash", data_schema=vol.Schema({}),
-            description_placeholders={
-                "proxy": self._proxy_name or "",
-                "file": result.proxy_file if result else "",
-                "files": ", ".join(result.changed_files) if result else "",
-            },
-        )
-
     async def _async_validate(self) -> str | None:
-        client = ElgaClient(lambda: connectable_device(self.hass, self._address), self._settings[CONF_PIN])
+        client = ElgaClient(
+            lambda: connectable_device(self.hass, self._address), self._settings[CONF_PIN],
+            pair_callback=partial(async_pair_gateway, self.hass),
+        )
         try:
             if connectable_device(self.hass, self._address) is None:
                 return "cannot_connect"

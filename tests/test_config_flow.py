@@ -133,7 +133,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(Exception):
             form["data_schema"]({"name": "Test", "scan_interval": 1, "slow_batch_size": 500})
 
-    async def test_proxy_discovery_and_setup_without_home_assistant_pin(self):
+    async def test_proxy_discovery_and_setup_uses_home_assistant_pin(self):
         remote = device()
         remote.details = {"source": "esphome-proxy"}
         reader = self.reader()
@@ -142,55 +142,17 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result["type"], "form")
             result = await self.flow.async_step_bluetooth(self.info)
             self.assertEqual(result["step_id"], "pair")
-            values = result["data_schema"]({"name": "Utility room"})
+            values = result["data_schema"]({"name": "Utility room", "pin": "000123"})
             with patch.object(config_flow, "ElgaClient", return_value=reader):
                 result = await self.flow.async_step_pair(values)
                 self.assertEqual(result["type"], "progress")
                 await self.flow._connect_task
                 await self.flow.async_step_connect()
         result = await self.flow.async_step_finish()
-        self.assertEqual(result["data"]["pin"], "")
+        self.assertEqual(result["data"]["pin"], "000123")
 
     async def test_local_adapter_cannot_omit_pin(self):
         self.flow._address = self.info.address
         result = await self.flow.async_step_pair({"name": "Utility room"})
         self.assertEqual(result["errors"]["pin"], "invalid_pin")
 
-    async def test_proxy_pin_is_written_to_esphome_then_flash_step(self):
-        from tempfile import TemporaryDirectory
-        from pathlib import Path
-        remote = device()
-        remote.details = {"source": "AA:BB:CC:DD:EE:FF"}
-        proxy_entry = SimpleNamespace(data={"bluetooth_mac_address": "aa:bb:cc:dd:ee:ff", "device_name": "elga-proxy"})
-        self.flow.hass.config_entries.async_entries = lambda domain: [proxy_entry] if domain == "esphome" else []
-        reader = self.reader()
-        with TemporaryDirectory() as temporary:
-            folder = Path(temporary) / "esphome"
-            folder.mkdir()
-            (folder / "elga-proxy.yaml").write_text("esphome:\n  name: elga-proxy\n", encoding="utf-8")
-            self.flow.hass.config.path = lambda *parts: str(Path(temporary, *parts))
-            self.flow._address = self.info.address
-            with patch.object(config_flow, "connectable_device", return_value=remote), \
-                    patch.object(config_flow, "ElgaClient", return_value=reader):
-                result = await self.flow.async_step_pair({"name": "Utility room", "pin": "000123"})
-                self.assertEqual(result["step_id"], "flash")
-                self.assertEqual(result["description_placeholders"]["file"], "elga-proxy.yaml")
-                self.assertIn('elga_pin: "000123"', (folder / "secrets.yaml").read_text(encoding="utf-8"))
-                self.assertFalse(self.flow.hass.tasks)
-                result = await self.flow.async_step_flash({})
-                self.assertEqual(result["type"], "progress")
-                await self.flow._connect_task
-                self.assertEqual((await self.flow.async_step_connect())["next_step_id"], "finish")
-                # Unchanged configuration on a retry goes straight to pairing.
-                self.flow._connect_task = None
-                result = await self.flow.async_step_pair({"name": "Utility room", "pin": "000123"})
-                self.assertEqual(result["type"], "progress")
-                await self.flow._connect_task
-
-    async def test_proxy_pin_without_known_proxy_shows_error(self):
-        remote = device()
-        remote.details = {"source": "AA:BB:CC:DD:EE:FF"}
-        self.flow._address = self.info.address
-        with patch.object(config_flow, "connectable_device", return_value=remote):
-            result = await self.flow.async_step_pair({"name": "Utility room", "pin": "000123"})
-        self.assertEqual(result["errors"]["base"], "proxy_not_found")

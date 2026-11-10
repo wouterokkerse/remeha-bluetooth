@@ -1,7 +1,22 @@
-esphome:
+# Elga Ace Bluetooth proxy - flash once, then everything is set up from Home Assistant.
+#
+# This is a normal ESPHome Bluetooth proxy plus one extra: Home Assistant can
+# hand it the appliance PIN for a short pairing window. No secrets.yaml, no
+# per-gateway settings. Wi-Fi is provisioned via the browser installer (Improv
+# serial), Bluetooth (Improv BLE) or the fallback hotspot; the API encryption key
+# is provisioned by Home Assistant when you add the device.
+substitutions:
   name: elga-proxy
   friendly_name: Elga Bluetooth Proxy
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  name_add_mac_suffix: true
   min_version: 2026.10.2
+  project:
+    name: wouterokkerse.elga-proxy
+    version: "0.4.0"
 
 esp32:
   board: esp32dev
@@ -9,24 +24,34 @@ esp32:
     type: esp-idf
 
 packages:
-  elga_pairing: !include elga-pairing-package.yaml
+  elga_pairing: github://wouterokkerse/remeha-bluetooth/esphome/elga-pairing-package.yaml@main
+
+dashboard_import:
+  package_import_url: github://wouterokkerse/remeha-bluetooth/esphome/elga-proxy.yaml@main
+  import_full_config: false
 
 logger:
   level: WARN
 
 api:
-  encryption:
-    key: !secret api_encryption_key
+  encryption: {}
 
 ota:
   - platform: esphome
-    password: !secret ota_password
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ap: {}
+
+captive_portal:
+
+improv_serial:
+
+esp32_improv:
+  authorizer: none
 
 esp32_ble_tracker:
+  scan_parameters:
+    active: true
 
 bluetooth_proxy:
   active: true

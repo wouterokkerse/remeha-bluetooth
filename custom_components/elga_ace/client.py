@@ -104,10 +104,12 @@ class ElgaClient:
                         disconnected_callback=self._disconnected, max_attempts=2,
                         timeout=20, pair=False,
                     )
-                    selected = getattr(self._client, "_connected_device", None)
-                    if not isinstance(selected, BLEDevice):
-                        selected = device
-                    await async_pair(selected, self._pin, self._client)
+                    selected = connected_device(self._client, device)
+                    self.connection_source = proxy_source(selected)
+                    if self._pair_callback is not None:
+                        await self._pair_callback(self._client, selected, self._pin)
+                    else:
+                        await async_pair(selected, self._pin, self._client)
                     required = (
                         CHAR_WRITE, CHAR_NOTIFY, CHAR_ERROR,
                         CHAR_IDENTIFICATION_WRITE, CHAR_IDENTIFICATION_NOTIFY,

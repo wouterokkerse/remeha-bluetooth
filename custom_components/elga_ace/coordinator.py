@@ -49,7 +49,10 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
         )
         self.address = entry.data[CONF_ADDRESS]
         self.registers = registers
-        self.client = ElgaClient(lambda: connectable_device(hass, self.address), entry.data.get(CONF_PIN, ""))
+        self.client = ElgaClient(
+            lambda: connectable_device(hass, self.address), entry.data.get(CONF_PIN, ""),
+            pair_callback=partial(async_pair_gateway, hass),
+        )
         self._batch_size = entry.options.get(CONF_SLOW_BATCH_SIZE, DEFAULT_SLOW_BATCH_SIZE)
         by_address = {(register.index, register.subindex): register for register in registers}
         self._fast = tuple(by_address[key] for key in FAST_REGISTERS)

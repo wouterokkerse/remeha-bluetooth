@@ -157,5 +157,5 @@ class CoordinatorTests(unittest.IsolatedAsyncioTestCase):
     async def test_home_assistant_can_choose_a_remote_proxy(self):
         remote = device()
         remote.details = {"source": "proxy"}
-        with patch.object(coordinator.bluetooth, "async_ble_device_from_address", return_value=remote):
+        with patch.object(transport.bluetooth, "async_ble_device_from_address", return_value=remote):
             self.assertIs(coordinator.connectable_device(self.hass, remote.address), remote)

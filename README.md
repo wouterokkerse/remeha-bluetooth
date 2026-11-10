@@ -14,20 +14,13 @@ test. No live Bluetooth tests are performed by the development tools.**
   with the built-in Bluetooth integration configured. The integration follows
   the Home Assistant 2026.11 Bluetooth APIs. The schema importer includes a
   Voluptuous fallback, but older Home Assistant releases are not a tested target.
-- Either a local Linux/BlueZ adapter or an active ESP32 ESPHome Bluetooth proxy
-  within range. For a proxy, configure its fixed PIN once using the small
-  [built-in ESPHome YAML package](esphome/README.md). No custom C++ component,
-  PIN-forwarding API action or additional integration dependency is required.
-- For local adapters only: access to system D-Bus/BlueZ. Container users must
-  expose that socket and adapter correctly. Proxy-only installations do not
-  require a local Bluetooth adapter.
-- Either a local Linux/BlueZ Bluetooth adapter or an **active ESP32 ESPHome
-  Bluetooth proxy** within range of the gateway. Proxy passkey support requires
-  the supplied companion firmware package and native API encryption; stock
-  proxy firmware does not forward a setup PIN. See [proxy setup](esphome/README.md).
+- Either a local Linux/BlueZ adapter or an ESP32 running the **Elga proxy
+  firmware** within range of the gateway. The Elga proxy firmware is a normal
+  ESPHome Bluetooth proxy plus a small PIN handler; you flash it once from the
+  browser and never edit YAML. A completely stock proxy cannot enter a Bluetooth
+  PIN. See [proxy setup](esphome/README.md).
 - For local adapters only: access from Home Assistant to system D-Bus/BlueZ.
-  Container users must expose that socket and adapter correctly. Proxy-only
-  installations do not need a local Bluetooth adapter or local pairing agent.
+  Container users must expose that socket and adapter correctly.
 - Bluetooth/service mode active on the appliance. Close the Remeha app and the
   standalone reader before connecting; they must not compete for the gateway.
 - The device catalog was extracted for **EHC-07, OBD 1.51**. Other firmware or
@@ -69,51 +62,28 @@ includes the HACS metadata fix.
 3. Open **Settings > Devices & services > Add integration** and select
    **Remeha Elga Ace Bluetooth**. A discovery card may also appear automatically.
 4. Select your gateway from the device list.
-5. Enter a device name. For a local adapter, enter the appliance's Bluetooth
-   PIN. For a proxy, leave that field empty; its PIN comes from ESPHome's
-   `secrets.yaml`, not from the Home Assistant form.
+5. Enter a device name and the appliance's Bluetooth PIN. This works the same
+   for a local adapter and an Elga proxy.
 6. Wait for pairing, BLE unlock, CAN authorization, appliance authorization and
    the verification read to finish.
 
 Local adapters use a temporary, device-scoped BlueZ PIN agent without replacing
-the system default agent. Proxies use their standard pairing method and the
-fixed passkey handler configured on the ESP32. Existing bonds are reused. A
-wrong PIN can temporarily lock the gateway; wait about a minute before retrying.
-
-### Simplest proxy configuration
-
-Use [`esphome/elga-pairing.yaml`](esphome/elga-pairing.yaml) with your existing
-ESPHome proxy configuration. Set the gateway MAC as the `elga_address`
-substitution and its numeric PIN as the `elga_pin` secret, then compile and flash
-the proxy yourself. See [the short setup guide](esphome/README.md).
-
-The package uses only `esp32_ble`, `bluetooth_proxy` and the built-in
-`ble_client.passkey_reply` action, with `auto_connect: false` so Home Assistant
-retains ownership of the connection. This replaces the earlier custom helper.
-There is deliberately no runtime PIN forwarding: changing the proxy PIN means
-updating its secret and firmware. The Home Assistant PIN field remains available
-for local adapters only. All 487 register entities stay read-only.
-The code is used for real Bluetooth authentication, not just stored in a form.
-Local connections use a device-scoped BlueZ agent without replacing the system
-default agent. Proxy connections deliver the code to the selected proxy's
-companion handler over its encrypted native API. Existing bonds are reused.
-A wrong PIN can temporarily lock the gateway, so wait about a minute before
-retrying if needed.
+the system default agent. With an Elga proxy, Home Assistant sends the PIN over
+the encrypted ESPHome API for a two-minute pairing window bound to the gateway's
+MAC, then clears it again; nothing is stored on the ESP32 and no ESPHome files
+are touched. Existing bonds are reused. A wrong PIN can temporarily lock the
+gateway; wait about a minute before retrying.
 
 ### Bluetooth proxies
 
-Version **0.2.0** supports active ESP32 ESPHome proxies without a local Bluetooth
-adapter. First install the small firmware package described in
-[`esphome/README.md`](esphome/README.md), then use the same device-selection,
-name and pairing-code wizard. All 487 entities remain read-only.
+1. Flash an ESP32 once with the Elga proxy firmware from the browser installer
+   (see [`esphome/README.md`](esphome/README.md)) and enter your Wi-Fi details.
+2. Add the discovered proxy in Home Assistant (ESPHome integration). Home
+   Assistant sets up the API encryption key.
+3. Add the Elga Ace integration and enter the PIN. Done.
 
-The standard proxy pairing API has no passkey argument. The companion package
-is therefore required for this PIN-protected gateway; the integration does not
-pretend that `pair(pin=...)` would work on unchanged stock firmware. Missing
-helper firmware, disabled API encryption or unsupported pairing produces a
-specific setup error. Install the helper on every proxy that HA may select for
-the gateway. The release ZIP includes the ESPHome sources and example YAML, but
-does not flash hardware automatically.
+All 487 entities remain read-only. Every proxy that Home Assistant may pick for
+the gateway needs the Elga proxy firmware.
 
 To build an installable archive, run `python tools/build_release.py`. Extract
 `dist/remeha-elga-ace-bluetooth.zip` into `/config` so that `custom_components`
@@ -198,14 +168,10 @@ Protect Home Assistant configuration files and backups accordingly.
 
 - **No gateways listed:** enable service/Bluetooth mode, close the app, check
   that the gateway is visible to a local adapter and retry the setup dialog.
-- **Proxy pairing fails:** check `elga_pin` in the proxy's `secrets.yaml`, the
-  gateway MAC, `io_capability: keyboard_only`, and `auto_connect: false`. Compile
-  and install the changed proxy YAML. The PIN field in Home Assistant is not
-  used for proxy pairing.
-- **Proxy pairing helper required:** install `esphome/elga-pairing-package.yaml`
-  and its component on the actual selected proxy, enable native API encryption,
-  flash it and reload its ESPHome integration. Merely seeing advertisements
-  through a proxy is not sufficient: it must support active GATT connections.
+- **Proxy cannot enter a PIN:** the proxy that reaches the gateway is not
+  running the Elga proxy firmware, or it was added without API encryption.
+  Flash it with the browser installer and re-add it in Home Assistant. Merely
+  seeing advertisements is not enough: it must support active connections.
 - **Pairing rejected:** check every PIN digit, including leading zeroes, and
   wait out the gateway's temporary lockout. An existing bond is not deleted
   automatically. Remove stale bonds using your host's Bluetooth tools only if

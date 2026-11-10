@@ -12,22 +12,18 @@
       },
       "pair": {
         "title": "Name and pair your Elga Ace",
-        "description": "Gateway: **{address}**. Enter the appliance's Bluetooth PIN. For a local Linux adapter it is used directly. For an ESPHome proxy it is written to the proxy's ESPHome configuration (secrets.yaml, elga-pairing.yaml and the proxy YAML) in /config/esphome; leave it empty if you already configured elga_pin on the proxy yourself. All entities are read-only.",
+        "description": "Gateway: **{address}**. Enter the appliance's Bluetooth PIN. It is used directly by a local Linux adapter, or sent briefly over the encrypted ESPHome API to an Elga Bluetooth proxy (flashed once with the Elga proxy firmware). All entities are read-only.",
         "data": {
           "name": "Device name",
           "pin": "Bluetooth PIN"
         },
         "data_description": {
           "name": "Used as the device name and entity name prefix.",
-          "pin": "Local adapter: used for pairing. ESPHome proxy: saved as elga_pin in /config/esphome/secrets.yaml (a backup of every changed file is kept as .elga-backup)."
+          "pin": "One to six digits. Stored in this integration only; no ESPHome files are changed."
         }
       },
       "connect": {
         "title": "Connecting to your gateway"
-      },
-      "flash": {
-        "title": "Install the updated proxy firmware",
-        "description": "The ESPHome configuration of proxy **{proxy}** was updated ({files}). Open ESPHome Device Builder, choose **Install** on {file} and wait until the proxy is back online. Then press Submit to pair with the gateway."
       }
     },
     "progress": {
@@ -35,19 +31,14 @@
     },
     "error": {
       "invalid_name": "Enter a device name between 1 and 80 characters.",
-      "invalid_pin": "Enter a PIN of one to six digits. For a proxy that already has elga_pin configured you can leave it empty.",
+      "invalid_pin": "Enter the appliance's Bluetooth PIN: one to six digits.",
       "invalid_auth": "Bluetooth rejected the pairing code. Check the code on the appliance. After an incorrect code the gateway may need about a minute before another attempt.",
-      "cannot_connect": "Unable to connect. Check service mode, Bluetooth range and free connection slots. For a proxy, check the elga_pin secret and built-in passkey configuration. Close other clients.",
+      "cannot_connect": "Unable to connect. Check service mode, Bluetooth range and free connection slots, and close the Remeha app and other clients.",
       "cannot_read": "Connected, but an authenticated register could not be read. Check that this is an Elga Ace EHC-07 gateway and try again.",
       "handshake_failed": "The gateway did not accept the BLE/CAN/appliance handshake. Keep service mode active and check the Home Assistant logs.",
-      "unsupported_adapter": "This transport cannot perform pairing. Use local Linux/BlueZ or update an active ESPHome proxy with the supplied built-in passkey configuration.",
+      "unsupported_adapter": "This Bluetooth adapter cannot perform PIN pairing. Use a local Linux/BlueZ adapter or a proxy running the Elga proxy firmware.",
       "unknown": "An unexpected error occurred. Check the Home Assistant logs.",
-      "proxy_not_found": "The ESPHome proxy that sees this gateway is not set up in Home Assistant's ESPHome integration, so its YAML cannot be found. Leave the PIN empty and configure the proxy manually.",
-      "esphome_dir_not_found": "The ESPHome configuration folder {esphome_dir} does not exist. Install ESPHome Device Builder, or leave the PIN empty and add elga_pin to the proxy's secrets.yaml yourself.",
-      "proxy_yaml_not_found": "No YAML file for proxy **{proxy}** was found in {esphome_dir} (looked for {proxy}.yaml and for `name: {proxy}`). If you build this proxy elsewhere, leave the PIN empty and configure it manually.",
-      "proxy_yaml_ambiguous": "Several YAML files in {esphome_dir} match proxy **{proxy}**. Leave the PIN empty and configure the proxy manually.",
-      "old_package": "The proxy still includes the old elga-pairing-package.yaml. Remove that include first, then try again.",
-      "proxy_write_failed": "Could not write the ESPHome configuration. Check the Home Assistant logs."
+      "proxy_pairing_required": "The ESPHome proxy that reaches this gateway cannot enter a PIN. Flash it once with the Elga proxy firmware (see README), make sure it is added in Home Assistant with API encryption, then try again."
     },
     "abort": {
       "already_configured": "This Bluetooth gateway is already configured.",
