@@ -24,9 +24,9 @@ from .const import (
     CONF_PIN, CONF_SLOW_BATCH_SIZE, DEFAULT_NAME, DEFAULT_SCAN_INTERVAL,
     DEFAULT_SLOW_BATCH_SIZE, DOMAIN,
 )
-from .transport import async_pair_gateway, connectable_device
-from .pairing import validate_pin
-from .protocol import DeviceUnavailable, PairingError, ProtocolError, ProxyPairingRequired, RegisterReadError, UnsupportedAdapter
+from .coordinator import connectable_device
+from .pairing import is_proxy, validate_pin
+from .protocol import DeviceUnavailable, PairingError, ProtocolError, RegisterReadError, UnsupportedAdapter
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -95,16 +95,16 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         return await self.async_step_pair()
 
     async def async_step_pair(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Ask for a device name and a secret, zero-preserving pairing code."""
+        """Ask for a name and, for local adapters only, a pairing code."""
         errors = {}
         if self._connect_error:
             errors["base"], self._connect_error = self._connect_error, None
         if user_input is not None:
             name = user_input[CONF_NAME].strip()
-            pin = user_input[CONF_PIN].strip()
+            pin = user_input.get(CONF_PIN, "").strip()
             if not name or len(name) > 80:
                 errors[CONF_NAME] = "invalid_name"
-            elif not validate_pin(pin):
+            elif (pin or not is_proxy(connectable_device(self.hass, self._address))) and not validate_pin(pin):
                 errors[CONF_PIN] = "invalid_pin"
             else:
                 self._settings = {CONF_ADDRESS: self._address, CONF_NAME: name, CONF_PIN: pin}
@@ -116,15 +116,12 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
             description_placeholders={"address": self._address or ""},
             data_schema=vol.Schema({
                 vol.Required(CONF_NAME, default=name): selector.TextSelector(),
-                vol.Required(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
+                vol.Optional(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
             }),
         )
 
     async def _async_validate(self) -> str | None:
-        client = ElgaClient(
-            lambda: connectable_device(self.hass, self._address), self._settings[CONF_PIN],
-            pair_callback=partial(async_pair_gateway, self.hass),
-        )
+        client = ElgaClient(lambda: connectable_device(self.hass, self._address), self._settings[CONF_PIN])
         try:
             if connectable_device(self.hass, self._address) is None:
                 return "cannot_connect"

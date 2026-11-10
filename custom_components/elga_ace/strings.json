@@ -5,35 +5,34 @@
     "step": {
       "user": {
         "title": "Select your Elga Ace gateway",
-        "description": "Activate Bluetooth/service mode on the appliance and close the Remeha app. Select the gateway discovered by a local adapter or an active ESPHome Bluetooth proxy.",
+        "description": "Activate Bluetooth/service mode on the appliance and close the Remeha app. Select a gateway seen by a local Bluetooth adapter or an active ESPHome proxy.",
         "data": {"address": "Bluetooth gateway"}
       },
       "pair": {
         "title": "Name and pair your Elga Ace",
-        "description": "Gateway: **{address}**. Enter your appliance's Bluetooth pairing code. Leading zeroes are preserved. Keep Bluetooth/service mode active and close other apps connected to the gateway. All entities are read-only.",
-        "data": {"name": "Device name", "pin": "Bluetooth pairing code"},
+        "description": "Gateway: **{address}**. For a local adapter, enter the appliance's PIN below. For an ESPHome proxy, leave it empty and configure the PIN once in the proxy's secrets.yaml using esphome/elga-pairing.yaml. All entities are read-only.",
+        "data": {"name": "Device name", "pin": "Local adapter PIN (leave empty for a proxy)"},
         "data_description": {
           "name": "Used as the device name and entity name prefix.",
-          "pin": "Your appliance's numeric Bluetooth passkey, up to six digits. The code is never exposed as an entity or included in diagnostics."
+          "pin": "Used only for local Linux/BlueZ pairing. ESPHome proxies use their own elga_pin secret; this field is not forwarded."
         }
       },
       "connect": {"title": "Connecting to your gateway"}
     },
-    "progress": {"connecting": "Pairing with the supplied code, unlocking BLE services, authorizing CAN and the appliance, then verifying an authenticated register read..."},
+    "progress": {"connecting": "Pairing, unlocking BLE services, authorizing CAN and the appliance, then verifying an authenticated register read..."},
     "error": {
       "invalid_name": "Enter a device name between 1 and 80 characters.",
-      "invalid_pin": "Enter a numeric Bluetooth passkey containing one to six digits.",
+      "invalid_pin": "Enter a local adapter PIN of one to six digits, or leave this field empty when using a proxy.",
       "invalid_auth": "Bluetooth rejected the pairing code. Check the code on the appliance. After an incorrect code the gateway may need about a minute before another attempt.",
-      "cannot_connect": "Unable to connect. Activate Bluetooth/service mode, check the adapter or proxy is within range with a free active connection slot, and close the Remeha app and standalone reader.",
+      "cannot_connect": "Unable to connect. Check service mode, Bluetooth range and free connection slots. For a proxy, check the elga_pin secret and built-in passkey configuration. Close other clients.",
       "cannot_read": "Connected, but an authenticated register could not be read. Check that this is an Elga Ace EHC-07 gateway and try again.",
       "handshake_failed": "The gateway did not accept the BLE/CAN/appliance handshake. Keep service mode active and check the Home Assistant logs.",
-      "proxy_pairing_required": "Install the supplied elga-pairing-package.yaml and companion component on the selected ESPHome proxy, enable native API encryption, flash it and reconnect it to Home Assistant. Stock proxy firmware does not forward the pairing code. See esphome/README.md.",
-      "unsupported_adapter": "This Bluetooth transport cannot pair with a passkey. Use local Linux/BlueZ or an ESP32 ESPHome proxy with current firmware and the supplied pairing helper.",
+      "unsupported_adapter": "This transport cannot perform pairing. Use local Linux/BlueZ or update an active ESPHome proxy with the supplied built-in passkey configuration.",
       "unknown": "An unexpected error occurred. Check the Home Assistant logs."
     },
     "abort": {
       "already_configured": "This Bluetooth gateway is already configured.",
-      "no_devices_found": "No unconfigured connectable GTW/EHC gateways were found. Enable Bluetooth/service mode, check your local adapter or active ESPHome proxy and start setup again.",
+      "no_devices_found": "No unconfigured connectable GTW/EHC gateways were found. Check service mode and your local adapter or active ESPHome proxy, then start setup again.",
       "not_supported": "This is not a supported connectable GTW/EHC gateway.",
       "reauth_successful": "The pairing code was updated. The integration is reconnecting."
     }

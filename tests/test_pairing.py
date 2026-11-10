@@ -2,13 +2,14 @@ import asyncio
 import sys
 import unittest
 from types import ModuleType, SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 import support
 
 from dbus_fast import MessageType, Variant
 from dbus_fast.errors import DBusError
 from dbus_fast.service import ServiceInterface
+from bleak.exc import BleakError
 from custom_components.elga_ace import pairing, protocol
 from test_client import device
 
@@ -126,3 +127,29 @@ class PairingTests(unittest.IsolatedAsyncioTestCase):
         remote.details = {"source": "esphome-proxy"}
         with self.assertRaises(protocol.UnsupportedAdapter):
             await pairing.async_pair(remote, "000123")
+
+    async def test_proxy_uses_standard_pairing_without_forwarding_pin(self):
+        remote = device()
+        remote.details = {"source": "esphome-proxy"}
+        gateway = SimpleNamespace(pair=AsyncMock())
+        with patch.object(pairing, "sys", SimpleNamespace(platform="win32")):
+            await pairing.async_pair(remote, "", gateway)
+            gateway.pair.assert_awaited_once_with()
+
+    async def test_proxy_pairing_failure_points_to_esphome_secret(self):
+        remote = device()
+        remote.details = {"source": "esphome-proxy"}
+        gateway = SimpleNamespace(pair=AsyncMock(side_effect=BleakError("Authentication failed")))
+        with self.assertRaisesRegex(protocol.DeviceUnavailable, "ESPHome secrets.yaml"):
+            await pairing.async_pair(remote, "", gateway)
+
+    async def test_old_proxy_firmware_gives_clear_error(self):
+        remote = device()
+        remote.details = {"source": "esphome-proxy"}
+        gateway = SimpleNamespace(pair=AsyncMock(side_effect=NotImplementedError()))
+        with self.assertRaisesRegex(protocol.UnsupportedAdapter, "Update"):
+            await pairing.async_pair(remote, "", gateway)
+
+    async def test_local_adapter_still_requires_pin(self):
+        with self.assertRaises(protocol.PairingError):
+            await pairing.async_pair(device(), "")

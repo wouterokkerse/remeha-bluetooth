@@ -1,0 +1,18 @@
+esp32_ble:
+  io_capability: keyboard_only
+  max_connections: 4
+
+esp32_ble_tracker:
+
+bluetooth_proxy:
+  active: true
+
+ble_client:
+  - mac_address: ${elga_address}
+    id: elga_passkey_handler
+    auto_connect: false
+    on_passkey_request:
+      then:
+        - ble_client.passkey_reply:
+            id: elga_passkey_handler
+            passkey: !secret elga_pin
