@@ -4,6 +4,15 @@ Use the existing ESPHome components: **no custom C++, external component or
 PIN-forwarding API action**. The fixed PIN is configured on the ESP32 once;
 Home Assistant uses the standard proxy pairing method.
 
+**Automatic (recommended):** enter the PIN in the Home Assistant setup form.
+When the gateway is reached through an ESPHome proxy, the integration writes
+`elga_pin` to `/config/esphome/secrets.yaml`, copies `elga-pairing.yaml` there
+and adds the `elga_address` substitution and package include to the proxy's
+YAML (backups are kept as `*.elga-backup`). Then install the proxy in ESPHome
+Device Builder and press Submit in the setup dialog.
+
+**Manual:** follow the steps below and leave the PIN field empty.
+
 1. Copy `elga-pairing.yaml` next to your existing ESPHome proxy YAML.
 2. Merge this into that proxy's configuration, using your gateway's MAC:
 
@@ -20,8 +29,7 @@ Home Assistant uses the standard proxy pairing method.
 4. Compile and install the changed proxy configuration yourself, then add or
    reload the ESPHome proxy in Home Assistant.
 5. Install the Elga integration, select the discovered gateway and give it a
-   name. **Leave the Home Assistant local-adapter PIN field empty.** For proxies,
-   that field is not forwarded or used; the PIN comes from `secrets.yaml`.
+   name. Leave the PIN field empty; the proxy uses `elga_pin` from `secrets.yaml`.
 
 Keep your existing board, Wi-Fi/Ethernet, encrypted API and OTA settings. This
 package is for an ESP32 proxy with built-in `ble_client` support. It sets the

@@ -10,7 +10,7 @@ def main():
     destination = ROOT / "dist/remeha-elga-ace-bluetooth.zip"
     destination.parent.mkdir(exist_ok=True)
     integration = ROOT / "custom_components/elga_ace"
-    files = [path for path in integration.rglob("*") if path.is_file() and "__pycache__" not in path.parts and path.suffix in {".py", ".json"}]
+    files = [path for path in integration.rglob("*") if path.is_file() and "__pycache__" not in path.parts and path.suffix in {".py", ".json", ".yaml"}]
     files += [ROOT / "README.md", ROOT / "LICENSE", ROOT / "hacs.json",
               ROOT / "esphome/elga-pairing.yaml", ROOT / "esphome/README.md"]
     with ZipFile(destination, "w", ZIP_DEFLATED) as archive:

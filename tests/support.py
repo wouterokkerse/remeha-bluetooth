@@ -88,7 +88,9 @@ class FakeHass:
             async_forward_entry_setups=AsyncMock(),
             async_unload_platforms=AsyncMock(return_value=True),
             async_loaded_entries=lambda domain: [],
+            async_entries=lambda domain: [],
         )
+        self.config = SimpleNamespace(path=lambda *parts: str(Path("/nonexistent-ha-config", *parts)))
 
     def async_create_task(self, coroutine):
         task = asyncio.create_task(coroutine)
