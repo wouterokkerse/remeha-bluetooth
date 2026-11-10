@@ -135,17 +135,27 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
             raw = await client.async_read(1, 0x5031, 0, timeout=5)
             if len(raw) != 2:
                 return "cannot_read"
-        except ProxyPairingRequired:
+        except ProxyPairingRequired as error:
+            _LOGGER.warning("Elga Ace setup: proxy cannot pair: %s", error)
             return "proxy_pairing_required"
-        except UnsupportedAdapter:
+        except UnsupportedAdapter as error:
+            _LOGGER.warning("Elga Ace setup: unsupported adapter: %s", error)
             return "unsupported_adapter"
-        except PairingError:
+        except PairingError as error:
+            _LOGGER.warning("Elga Ace setup: pairing rejected: %s", error)
             return "invalid_auth"
-        except RegisterReadError:
+        except RegisterReadError as error:
+            _LOGGER.warning("Elga Ace setup: register read failed: %s", error)
             return "cannot_read"
-        except ProtocolError:
+        except ProtocolError as error:
+            _LOGGER.warning("Elga Ace setup: handshake failed: %s", error)
             return "handshake_failed"
-        except (DeviceUnavailable, BleakError, OSError, TimeoutError):
+        except (DeviceUnavailable, BleakError, OSError, TimeoutError) as error:
+            _LOGGER.warning(
+                "Elga Ace setup: cannot connect via %s: %s (%s)",
+                client.connection_source or "local adapter or before connecting", error or "timeout", type(error).__name__,
+                exc_info=_LOGGER.isEnabledFor(logging.DEBUG),
+            )
             return "cannot_connect"
         except Exception:
             _LOGGER.exception("Unexpected Elga Ace setup failure")
