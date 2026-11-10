@@ -31,6 +31,12 @@ jobs:
           mkdir -p site/firmware
           cp docs/index.html site/
           cp -r "${{ steps.esphome.outputs.name }}"/* site/firmware/
+          # ESP Web Tools needs name/version/builds[]; build-action writes a single build.
+          jq '{name: "Elga Bluetooth Proxy", version: "0.4.0",
+               new_install_prompt_erase: true,
+               builds: [{chipFamily: .chipFamily, parts: .parts}]}' \
+            "${{ steps.esphome.outputs.name }}/manifest.json" > site/firmware/manifest.json
+          cat site/firmware/manifest.json
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
