@@ -154,10 +154,8 @@ class CoordinatorTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("000123", str(diagnostic))
         self.assertEqual(diagnostic["catalog_registers"], 487)
 
-    async def test_local_adapter_preferred_over_remote_proxy(self):
-        local = device()
+    async def test_home_assistant_can_choose_a_remote_proxy(self):
         remote = device()
         remote.details = {"source": "proxy"}
-        candidates = [SimpleNamespace(ble_device=remote), SimpleNamespace(ble_device=local)]
-        with patch.object(coordinator.bluetooth, "async_scanner_devices_by_address", return_value=candidates):
-            self.assertIs(coordinator.local_device(self.hass, local.address), local)
+        with patch.object(coordinator.bluetooth, "async_ble_device_from_address", return_value=remote):
+            self.assertIs(coordinator.connectable_device(self.hass, remote.address), remote)

@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 import support
 
 from bleak.backends.device import BLEDevice
-from custom_components.elga_ace import client, const, protocol
+from custom_components.elga_ace import client, const, pairing, protocol
 
 CAPTURE = (
     (const.CHAR_IDENTIFICATION_WRITE, "", const.CHAR_IDENTIFICATION_NOTIFY, "9c5e26e130290d4d"),
@@ -195,3 +195,24 @@ class ClientTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(protocol.DeviceUnavailable):
             await reader.async_connect()
         self.pair_mock.assert_not_awaited()
+
+    async def test_proxy_pairing_and_capture_handshake_need_no_local_pin(self):
+        remote = device()
+        remote.details = {"source": "esphome-proxy"}
+        self.gatt._connected_device = remote
+        self.gatt.pair = AsyncMock()
+        self.pair_mock.side_effect = pairing.async_pair
+        reader = client.ElgaClient(device, "")
+        self.addAsyncCleanup(reader.async_close)
+        await reader.async_connect()
+        self.assertTrue(reader.connected)
+        self.gatt.pair.assert_awaited_once_with()
+        self.assertIs(self.pair_mock.await_args.args[0], remote)
+        self.assertEqual([packet.hex() for _, packet in self.gatt.writes], [row[1] for row in CAPTURE])
+
+    async def test_pairing_failure_closes_connection(self):
+        self.pair_mock.side_effect = protocol.PairingError("Rejected")
+        with self.assertRaises(protocol.PairingError):
+            await self.reader.async_connect()
+        self.assertTrue(self.gatt.closed)
+        self.assertFalse(self.gatt.callbacks)

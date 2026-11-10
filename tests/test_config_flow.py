@@ -16,7 +16,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         self.flow.hass = support.FakeHass()
         self.flow.context = {}
         self.info = SimpleNamespace(address=device().address, name="GTW-test", connectable=True)
-        self.local_patch = patch.object(config_flow, "local_device", return_value=device())
+        self.local_patch = patch.object(config_flow, "connectable_device", return_value=device())
         self.scan_patch = patch.object(config_flow.bluetooth, "async_discovered_service_info", return_value=[self.info])
         self.active_patch = patch.object(config_flow.bluetooth, "async_request_active_scan", new=AsyncMock())
         self.local_patch.start()
@@ -50,10 +50,10 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
             result = await self.flow.async_step_user()
         self.assertEqual(result["reason"], "no_devices_found")
 
-    async def test_remote_only_message_explains_pairing_limit(self):
-        with patch.object(config_flow, "local_device", return_value=None):
+    async def test_unreachable_device_is_not_offered(self):
+        with patch.object(config_flow, "connectable_device", return_value=None):
             result = await self.flow.async_step_user()
-        self.assertEqual(result["reason"], "local_adapter_required")
+        self.assertEqual(result["reason"], "no_devices_found")
 
     async def test_invalid_name_and_pin_do_not_start_pairing(self):
         self.flow._address = self.info.address
@@ -87,7 +87,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["data"]["pin"], "000123")
 
     async def test_error_is_returned_to_form_without_saving_entry(self):
-        for error, expected in ((PairingError(), "invalid_auth"), (ProtocolError(), "handshake_failed"), (UnsupportedAdapter(), "local_adapter_required")):
+        for error, expected in ((PairingError(), "invalid_auth"), (ProtocolError(), "handshake_failed"), (UnsupportedAdapter(), "unsupported_adapter")):
             with self.subTest(error=type(error).__name__):
                 result = await self.complete_validation(self.reader(error))
                 self.assertEqual(result["next_step_id"], "pair")
@@ -132,3 +132,26 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["data"]["scan_interval"], 45)
         with self.assertRaises(Exception):
             form["data_schema"]({"name": "Test", "scan_interval": 1, "slow_batch_size": 500})
+
+    async def test_proxy_discovery_and_setup_without_home_assistant_pin(self):
+        remote = device()
+        remote.details = {"source": "esphome-proxy"}
+        reader = self.reader()
+        with patch.object(config_flow, "connectable_device", return_value=remote):
+            result = await self.flow.async_step_user()
+            self.assertEqual(result["type"], "form")
+            result = await self.flow.async_step_bluetooth(self.info)
+            self.assertEqual(result["step_id"], "pair")
+            values = result["data_schema"]({"name": "Utility room"})
+            with patch.object(config_flow, "ElgaClient", return_value=reader):
+                result = await self.flow.async_step_pair(values)
+                self.assertEqual(result["type"], "progress")
+                await self.flow._connect_task
+                await self.flow.async_step_connect()
+        result = await self.flow.async_step_finish()
+        self.assertEqual(result["data"]["pin"], "")
+
+    async def test_local_adapter_cannot_omit_pin(self):
+        self.flow._address = self.info.address
+        result = await self.flow.async_step_pair({"name": "Utility room"})
+        self.assertEqual(result["errors"]["pin"], "invalid_pin")

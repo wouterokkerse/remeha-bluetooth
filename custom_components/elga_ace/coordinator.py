@@ -22,21 +22,15 @@ from .const import (
     FAST_REGISTERS, POLL_BUDGET, REGISTER_RETRY_DELAY, REGISTER_TIMEOUT,
     SLOW_REFRESH_INTERVAL,
 )
-from .pairing import bluez_path
 from .protocol import DeviceUnavailable, ElgaError, PairingError, RegisterReadError
 from .registers import Register
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def local_device(hass: HomeAssistant, address: str):
-    """Prefer local BlueZ even if a proxy has the stronger advertisement."""
-    devices = bluetooth.async_scanner_devices_by_address(hass, address, connectable=True)
-    for candidate in devices:
-        if bluez_path(candidate.ble_device):
-            return candidate.ble_device
-    candidate = bluetooth.async_ble_device_from_address(hass, address, connectable=True)
-    return candidate if candidate is not None and bluez_path(candidate) else None
+def connectable_device(hass: HomeAssistant, address: str):
+    """Use Home Assistant's normal local-adapter or active-proxy routing."""
+    return bluetooth.async_ble_device_from_address(hass, address, connectable=True)
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,7 +53,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
         )
         self.address = entry.data[CONF_ADDRESS]
         self.registers = registers
-        self.client = ElgaClient(lambda: local_device(hass, self.address), entry.data[CONF_PIN])
+        self.client = ElgaClient(lambda: connectable_device(hass, self.address), entry.data.get(CONF_PIN, ""))
         self._batch_size = entry.options.get(CONF_SLOW_BATCH_SIZE, DEFAULT_SLOW_BATCH_SIZE)
         by_address = {(register.index, register.subindex): register for register in registers}
         self._fast = tuple(by_address[key] for key in FAST_REGISTERS)

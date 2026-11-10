@@ -14,18 +14,25 @@ test. No live Bluetooth tests are performed by the development tools.**
   with the built-in Bluetooth integration configured. The integration follows
   the Home Assistant 2026.11 Bluetooth APIs. The schema importer includes a
   Voluptuous fallback, but older Home Assistant releases are not a tested target.
-- A **local** Bluetooth adapter within range of the gateway. **ESPHome Bluetooth
-  proxies are not supported in this version:** the numeric passkey is supplied
-  through a temporary local BlueZ D-Bus agent. Merely discovering a device via a
-  proxy is not sufficient for this pairing implementation.
-- Access from Home Assistant to the system D-Bus/BlueZ service. Container users
-  must expose the host's system D-Bus socket and Bluetooth adapter correctly.
+- Either a local Linux/BlueZ adapter or an active ESP32 ESPHome Bluetooth proxy
+  within range. For a proxy, configure its fixed PIN once using the small
+  [built-in ESPHome YAML package](esphome/README.md). No custom C++ component,
+  PIN-forwarding API action or additional integration dependency is required.
+- For local adapters only: access to system D-Bus/BlueZ. Container users must
+  expose that socket and adapter correctly. Proxy-only installations do not
+  require a local Bluetooth adapter.
 - Bluetooth/service mode active on the appliance. Close the Remeha app and the
   standalone reader before connecting; they must not compete for the gateway.
 - The device catalog was extracted for **EHC-07, OBD 1.51**. Other firmware or
   appliance variants can have missing or different registers.
 
 ## Installation
+
+Marketplace/HACS: add `https://github.com/wouterokkerse/remeha-bluetooth` as a
+custom repository of type **Integration**, download it and restart Home
+Assistant. The root `hacs.json` is included; select the updated branch or a new
+release if an older tag lacks it. HACS installs the integration only, not the
+separate proxy YAML. For manual installation:
 
 1. Copy `custom_components/elga_ace` into your Home Assistant configuration
    directory. The resulting path must be
@@ -34,16 +41,30 @@ test. No live Bluetooth tests are performed by the development tools.**
 3. Open **Settings > Devices & services > Add integration** and select
    **Remeha Elga Ace Bluetooth**. A discovery card may also appear automatically.
 4. Select your gateway from the device list.
-5. Enter a device name and the Bluetooth pairing code from your appliance.
-   Leading zeroes are preserved; this is not a fabricated default PIN.
+5. Enter a device name. For a local adapter, enter the appliance's Bluetooth
+   PIN. For a proxy, leave that field empty; its PIN comes from ESPHome's
+   `secrets.yaml`, not from the Home Assistant form.
 6. Wait for pairing, BLE unlock, CAN authorization, appliance authorization and
    the verification read to finish.
 
-The code is used for real BlueZ authentication, not just stored in a form. A
-previously bonded adapter reuses its existing Bluetooth bond. The agent is
-scoped to the selected device and the pairing operation; it never replaces the
-system default agent. A wrong PIN can temporarily lock the gateway, so wait
-about a minute before retrying if needed.
+Local adapters use a temporary, device-scoped BlueZ PIN agent without replacing
+the system default agent. Proxies use their standard pairing method and the
+fixed passkey handler configured on the ESP32. Existing bonds are reused. A
+wrong PIN can temporarily lock the gateway; wait about a minute before retrying.
+
+### Simplest proxy configuration
+
+Use [`esphome/elga-pairing.yaml`](esphome/elga-pairing.yaml) with your existing
+ESPHome proxy configuration. Set the gateway MAC as the `elga_address`
+substitution and its numeric PIN as the `elga_pin` secret, then compile and flash
+the proxy yourself. See [the short setup guide](esphome/README.md).
+
+The package uses only `esp32_ble`, `bluetooth_proxy` and the built-in
+`ble_client.passkey_reply` action, with `auto_connect: false` so Home Assistant
+retains ownership of the connection. This replaces the earlier custom helper.
+There is deliberately no runtime PIN forwarding: changing the proxy PIN means
+updating its secret and firmware. The Home Assistant PIN field remains available
+for local adapters only. All 487 register entities stay read-only.
 
 To build an installable archive, run `python tools/build_release.py`. Extract
 `dist/remeha-elga-ace-bluetooth.zip` into `/config` so that `custom_components`
@@ -119,7 +140,7 @@ interval (20-300 seconds) or background batch size (1-60). Disabling an entity
 does not currently remove its address from the catalog polling rotation. The
 batch scheduler, not the entity count, bounds Bluetooth traffic.
 
-The pairing code is stored in Home Assistant's private config-entry storage,
+For local adapters, the pairing code is stored in Home Assistant's private config-entry storage,
 as other integration credentials are. It is masked in the setup form, never
 exposed on entities, and redacted from downloadable integration diagnostics.
 Protect Home Assistant configuration files and backups accordingly.
@@ -128,8 +149,10 @@ Protect Home Assistant configuration files and backups accordingly.
 
 - **No gateways listed:** enable service/Bluetooth mode, close the app, check
   that the gateway is visible to a local adapter and retry the setup dialog.
-- **Local adapter required:** this version cannot deliver passkeys through a
-  remote Bluetooth proxy. Use an in-range local USB/on-board adapter.
+- **Proxy pairing fails:** check `elga_pin` in the proxy's `secrets.yaml`, the
+  gateway MAC, `io_capability: keyboard_only`, and `auto_connect: false`. Compile
+  and install the changed proxy YAML. The PIN field in Home Assistant is not
+  used for proxy pairing.
 - **Pairing rejected:** check every PIN digit, including leading zeroes, and
   wait out the gateway's temporary lockout. An existing bond is not deleted
   automatically. Remove stale bonds using your host's Bluetooth tools only if
@@ -183,7 +206,6 @@ included in the integration or its release archive.
 
 This is an unofficial integration, not affiliated with or supported by Remeha.
 
-The repository is currently local-only. The manifest intentionally has no
-fabricated documentation/issue-tracker URL. Before publishing through HACS or
-running its full metadata checks, add the real repository README URL as
-`documentation` and the real issue tracker as `issue_tracker` in `manifest.json`.
+The HACS metadata installs directly from `custom_components/elga_ace`; a release
+ZIP asset is not required. Push the changed repository files before installing
+from GitHub, and include the root `hacs.json` in any new release tag.

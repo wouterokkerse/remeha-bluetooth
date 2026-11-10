@@ -23,8 +23,8 @@ from .const import (
     CONF_PIN, CONF_SLOW_BATCH_SIZE, DEFAULT_NAME, DEFAULT_SCAN_INTERVAL,
     DEFAULT_SLOW_BATCH_SIZE, DOMAIN,
 )
-from .coordinator import local_device
-from .pairing import validate_pin
+from .coordinator import connectable_device
+from .pairing import is_proxy, validate_pin
 from .protocol import DeviceUnavailable, PairingError, ProtocolError, RegisterReadError, UnsupportedAdapter
 
 _LOGGER = logging.getLogger(__name__)
@@ -61,17 +61,16 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         if active_scan := getattr(bluetooth, "async_request_active_scan", None):
             await active_scan(self.hass, duration=5)
         configured = self._async_current_ids(include_ignore=False)
-        remote_devices = False
+        self._devices.clear()
         for info in bluetooth.async_discovered_service_info(self.hass, connectable=True):
             address = info.address.upper()
             if not supported_name(info.name or "") or address in configured:
                 continue
-            if local_device(self.hass, address) is None:
-                remote_devices = True
+            if connectable_device(self.hass, address) is None:
                 continue
             self._devices[address] = f"{info.name} ({address})"
         if not self._devices:
-            return self.async_abort(reason="local_adapter_required" if remote_devices else "no_devices_found")
+            return self.async_abort(reason="no_devices_found")
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({vol.Required(CONF_ADDRESS): selector.SelectSelector(
@@ -89,22 +88,22 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured()
         if not discovery_info.connectable or not supported_name(discovery_info.name or ""):
             return self.async_abort(reason="not_supported")
-        if local_device(self.hass, self._address) is None:
-            return self.async_abort(reason="local_adapter_required")
+        if connectable_device(self.hass, self._address) is None:
+            return self.async_abort(reason="no_devices_found")
         self.context["title_placeholders"] = {"name": discovery_info.name or DEFAULT_NAME}
         return await self.async_step_pair()
 
     async def async_step_pair(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
-        """Ask for a device name and a secret, zero-preserving pairing code."""
+        """Ask for a name and, for local adapters only, a pairing code."""
         errors = {}
         if self._connect_error:
             errors["base"], self._connect_error = self._connect_error, None
         if user_input is not None:
             name = user_input[CONF_NAME].strip()
-            pin = user_input[CONF_PIN].strip()
+            pin = user_input.get(CONF_PIN, "").strip()
             if not name or len(name) > 80:
                 errors[CONF_NAME] = "invalid_name"
-            elif not validate_pin(pin):
+            elif (pin or not is_proxy(connectable_device(self.hass, self._address))) and not validate_pin(pin):
                 errors[CONF_PIN] = "invalid_pin"
             else:
                 self._settings = {CONF_ADDRESS: self._address, CONF_NAME: name, CONF_PIN: pin}
@@ -116,21 +115,21 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
             description_placeholders={"address": self._address or ""},
             data_schema=vol.Schema({
                 vol.Required(CONF_NAME, default=name): selector.TextSelector(),
-                vol.Required(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
+                vol.Optional(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
             }),
         )
 
     async def _async_validate(self) -> str | None:
-        client = ElgaClient(lambda: local_device(self.hass, self._address), self._settings[CONF_PIN])
+        client = ElgaClient(lambda: connectable_device(self.hass, self._address), self._settings[CONF_PIN])
         try:
-            if local_device(self.hass, self._address) is None:
+            if connectable_device(self.hass, self._address) is None:
                 return "cannot_connect"
             await client.async_connect()
             raw = await client.async_read(1, 0x5031, 0, timeout=5)
             if len(raw) != 2:
                 return "cannot_read"
         except UnsupportedAdapter:
-            return "local_adapter_required"
+            return "unsupported_adapter"
         except PairingError:
             return "invalid_auth"
         except RegisterReadError:

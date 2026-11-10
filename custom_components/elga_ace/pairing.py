@@ -7,6 +7,7 @@ from contextlib import suppress
 from uuid import uuid4
 
 from bleak.backends.device import BLEDevice
+from bleak.exc import BleakError
 
 from .protocol import DeviceUnavailable, PairingError, UnsupportedAdapter
 
@@ -25,8 +26,25 @@ def validate_pin(pin: str) -> bool:
     return bool(re.fullmatch(r"[0-9]{1,6}", pin))
 
 
-async def async_pair(device: BLEDevice, pin: str) -> None:
-    """Pair on the same D-Bus connection that owns the temporary agent."""
+def is_proxy(device: BLEDevice | None) -> bool:
+    """Recognize a remote route without requiring a local Bluetooth adapter."""
+    details = getattr(device, "details", None)
+    return isinstance(details, dict) and bool(details.get("source")) and not bluez_path(device)
+
+
+async def async_pair(device: BLEDevice, pin: str, client=None) -> None:
+    """Use standard proxy pairing or the scoped local BlueZ passkey agent."""
+    if is_proxy(device):
+        if client is None:
+            raise UnsupportedAdapter("Connect to the proxy before pairing")
+        try:
+            async with asyncio.timeout(60):
+                await client.pair()
+        except NotImplementedError as error:
+            raise UnsupportedAdapter("Update the ESPHome proxy firmware to enable pairing") from error
+        except BleakError as error:
+            raise DeviceUnavailable("Proxy pairing failed; check the PIN in ESPHome secrets.yaml and service mode") from error
+        return
     if not validate_pin(pin):
         raise PairingError("Invalid pairing code format")
     path = bluez_path(device)

@@ -78,3 +78,14 @@ class RegisterTests(unittest.TestCase):
         manifest = json.loads((support.PACKAGE / "manifest.json").read_text())
         self.assertEqual(manifest["domain"], "elga_ace")
         self.assertTrue(manifest["config_flow"])
+
+    def test_hacs_metadata_and_proxy_package_use_standard_installation(self):
+        metadata = json.loads((support.ROOT / "hacs.json").read_text())
+        self.assertFalse(metadata["content_in_root"])
+        self.assertFalse(metadata["zip_release"])
+        package = (support.ROOT / "esphome/elga-pairing.yaml").read_text()
+        self.assertIn("auto_connect: false", package)
+        self.assertIn("ble_client.passkey_reply", package)
+        self.assertIn("!secret elga_pin", package)
+        self.assertNotIn("external_components", package)
+        self.assertNotIn("api:", package)

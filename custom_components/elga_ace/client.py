@@ -88,14 +88,17 @@ class ElgaClient:
             device = self._device_callback()
             if device is None:
                 raise DeviceUnavailable("Selected gateway is not in Bluetooth range")
-            await async_pair(device, self._pin)
             try:
-                async with asyncio.timeout(60):
+                async with asyncio.timeout(120):
                     self._client = await establish_connection(
                         BleakClientWithServiceCache, device, device.name or device.address,
                         disconnected_callback=self._disconnected, max_attempts=2,
                         timeout=20, pair=False,
                     )
+                    selected = getattr(self._client, "_connected_device", None)
+                    if not isinstance(selected, BLEDevice):
+                        selected = device
+                    await async_pair(selected, self._pin, self._client)
                     required = (
                         CHAR_WRITE, CHAR_NOTIFY, CHAR_ERROR,
                         CHAR_IDENTIFICATION_WRITE, CHAR_IDENTIFICATION_NOTIFY,
