@@ -37,7 +37,7 @@ jobs:
                builds: [{chipFamily: .chipFamily, parts: .parts}]}' \
             "${{ steps.esphome.outputs.name }}/manifest.json" > site/firmware/manifest.json
           cat site/firmware/manifest.json
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
 
