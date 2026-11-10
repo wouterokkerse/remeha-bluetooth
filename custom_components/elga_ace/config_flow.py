@@ -128,7 +128,11 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
         name = self._settings.get(CONF_NAME, self._existing_entry.title if self._existing_entry else DEFAULT_NAME)
         return self.async_show_form(
             step_id="pair", errors=errors,
-            description_placeholders={"address": self._address or ""},
+            description_placeholders={
+                "address": self._address or "",
+                "proxy": self._proxy_name or "?",
+                "esphome_dir": self.hass.config.path("esphome"),
+            },
             data_schema=vol.Schema({
                 vol.Required(CONF_NAME, default=name): selector.TextSelector(),
                 vol.Optional(CONF_PIN): selector.TextSelector(selector.TextSelectorConfig(type=selector.TextSelectorType.PASSWORD)),
