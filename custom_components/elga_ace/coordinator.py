@@ -29,11 +29,6 @@ from .transport import async_pair_gateway, connectable_device
 _LOGGER = logging.getLogger(__name__)
 
 
-def connectable_device(hass: HomeAssistant, address: str):
-    """Use Home Assistant's normal local-adapter or active-proxy routing."""
-    return bluetooth.async_ble_device_from_address(hass, address, connectable=True)
-
-
 @dataclass(frozen=True, slots=True)
 class Reading:
     """Value plus its actual observation time, not the latest poll time."""

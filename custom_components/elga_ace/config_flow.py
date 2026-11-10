@@ -26,7 +26,10 @@ from .const import (
 )
 from .coordinator import connectable_device
 from .pairing import is_proxy, validate_pin
-from .protocol import DeviceUnavailable, PairingError, ProtocolError, RegisterReadError, UnsupportedAdapter
+from .protocol import (
+    DeviceUnavailable, PairingError, ProtocolError, ProxyPairingRequired,
+    RegisterReadError, UnsupportedAdapter,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
