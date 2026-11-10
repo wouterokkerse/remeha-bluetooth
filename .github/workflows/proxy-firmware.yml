@@ -2,7 +2,7 @@ name: Elga proxy firmware
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths: ["esphome/**", "docs/**", ".github/workflows/proxy-firmware.yml"]
   workflow_dispatch:
 
@@ -19,7 +19,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build firmware
         id: esphome
         uses: esphome/build-action@v7
