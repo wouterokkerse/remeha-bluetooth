@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 import support
 
 from custom_components.elga_ace import config_flow
-from custom_components.elga_ace.protocol import PairingError, ProtocolError, UnsupportedAdapter
+from custom_components.elga_ace.protocol import PairingError, ProtocolError, ProxyPairingRequired, UnsupportedAdapter
 from test_client import device
 
 

@@ -1,0 +1,32 @@
+esphome:
+  name: elga-proxy
+  friendly_name: Elga Bluetooth Proxy
+  min_version: 2026.10.2
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+packages:
+  elga_pairing: !include elga-pairing-package.yaml
+
+logger:
+  level: WARN
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+esp32_ble_tracker:
+
+bluetooth_proxy:
+  active: true

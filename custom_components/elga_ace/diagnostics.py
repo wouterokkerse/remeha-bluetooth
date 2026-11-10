@@ -13,6 +13,7 @@ async def async_get_config_entry_diagnostics(hass: HomeAssistant, entry: ConfigE
         "entry": async_redact_data(dict(entry.data), {CONF_PIN}),
         "options": dict(entry.options),
         "connected": coordinator.client.connected,
+        "proxy_source": getattr(coordinator.client, "connection_source", None),
         "catalog_registers": len(coordinator.registers),
         "readable_registers": len(coordinator.data),
         "read_errors": dict(coordinator.read_errors),

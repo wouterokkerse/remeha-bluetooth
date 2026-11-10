@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from functools import partial
 from typing import Any
 
 try:
@@ -128,6 +129,8 @@ class ElgaConfigFlow(ConfigFlow, domain=DOMAIN):
             raw = await client.async_read(1, 0x5031, 0, timeout=5)
             if len(raw) != 2:
                 return "cannot_read"
+        except ProxyPairingRequired:
+            return "proxy_pairing_required"
         except UnsupportedAdapter:
             return "unsupported_adapter"
         except PairingError:

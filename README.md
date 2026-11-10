@@ -21,6 +21,13 @@ test. No live Bluetooth tests are performed by the development tools.**
 - For local adapters only: access to system D-Bus/BlueZ. Container users must
   expose that socket and adapter correctly. Proxy-only installations do not
   require a local Bluetooth adapter.
+- Either a local Linux/BlueZ Bluetooth adapter or an **active ESP32 ESPHome
+  Bluetooth proxy** within range of the gateway. Proxy passkey support requires
+  the supplied companion firmware package and native API encryption; stock
+  proxy firmware does not forward a setup PIN. See [proxy setup](esphome/README.md).
+- For local adapters only: access from Home Assistant to system D-Bus/BlueZ.
+  Container users must expose that socket and adapter correctly. Proxy-only
+  installations do not need a local Bluetooth adapter or local pairing agent.
 - Bluetooth/service mode active on the appliance. Close the Remeha app and the
   standalone reader before connecting; they must not compete for the gateway.
 - The device catalog was extracted for **EHC-07, OBD 1.51**. Other firmware or
@@ -33,6 +40,27 @@ custom repository of type **Integration**, download it and restart Home
 Assistant. The root `hacs.json` is included; select the updated branch or a new
 release if an older tag lacks it. HACS installs the integration only, not the
 separate proxy YAML. For manual installation:
+### Marketplace / HACS
+
+1. Add `https://github.com/wouterokkerse/remeha-bluetooth` as a custom repository
+   in Marketplace/HACS, choosing **Integration** if asked for a repository type.
+2. Download **Remeha Elga Ace Bluetooth** and restart Home Assistant.
+3. Open **Settings > Devices & services > Add integration** and select
+   **Remeha Elga Ace Bluetooth**.
+4. Select your gateway, enter its pairing code, and choose a device name.
+
+Marketplace/HACS installs `custom_components/elga_ace` directly from the selected
+GitHub version. No release ZIP asset is required. It does **not** install or
+flash the separate ESPHome firmware package: proxy users must also follow
+[`esphome/README.md`](https://github.com/wouterokkerse/remeha-bluetooth/blob/main/esphome/README.md).
+
+If you see **"no hacs.json in its root"**, the version being installed must
+include the root `hacs.json`. Push the updated files to GitHub and select the
+updated default branch, or publish a new release from that commit. Updating
+`main` does not fix an already-published older release tag. Version **0.2.1**
+includes the HACS metadata fix.
+
+### Manual installation
 
 1. Copy `custom_components/elga_ace` into your Home Assistant configuration
    directory. The resulting path must be
@@ -65,6 +93,27 @@ retains ownership of the connection. This replaces the earlier custom helper.
 There is deliberately no runtime PIN forwarding: changing the proxy PIN means
 updating its secret and firmware. The Home Assistant PIN field remains available
 for local adapters only. All 487 register entities stay read-only.
+The code is used for real Bluetooth authentication, not just stored in a form.
+Local connections use a device-scoped BlueZ agent without replacing the system
+default agent. Proxy connections deliver the code to the selected proxy's
+companion handler over its encrypted native API. Existing bonds are reused.
+A wrong PIN can temporarily lock the gateway, so wait about a minute before
+retrying if needed.
+
+### Bluetooth proxies
+
+Version **0.2.0** supports active ESP32 ESPHome proxies without a local Bluetooth
+adapter. First install the small firmware package described in
+[`esphome/README.md`](esphome/README.md), then use the same device-selection,
+name and pairing-code wizard. All 487 entities remain read-only.
+
+The standard proxy pairing API has no passkey argument. The companion package
+is therefore required for this PIN-protected gateway; the integration does not
+pretend that `pair(pin=...)` would work on unchanged stock firmware. Missing
+helper firmware, disabled API encryption or unsupported pairing produces a
+specific setup error. Install the helper on every proxy that HA may select for
+the gateway. The release ZIP includes the ESPHome sources and example YAML, but
+does not flash hardware automatically.
 
 To build an installable archive, run `python tools/build_release.py`. Extract
 `dist/remeha-elga-ace-bluetooth.zip` into `/config` so that `custom_components`
@@ -153,6 +202,10 @@ Protect Home Assistant configuration files and backups accordingly.
   gateway MAC, `io_capability: keyboard_only`, and `auto_connect: false`. Compile
   and install the changed proxy YAML. The PIN field in Home Assistant is not
   used for proxy pairing.
+- **Proxy pairing helper required:** install `esphome/elga-pairing-package.yaml`
+  and its component on the actual selected proxy, enable native API encryption,
+  flash it and reload its ESPHome integration. Merely seeing advertisements
+  through a proxy is not sufficient: it must support active GATT connections.
 - **Pairing rejected:** check every PIN digit, including leading zeroes, and
   wait out the gateway's temporary lockout. An existing bond is not deleted
   automatically. Remove stale bonds using your host's Bluetooth tools only if
@@ -209,3 +262,15 @@ This is an unofficial integration, not affiliated with or supported by Remeha.
 The HACS metadata installs directly from `custom_components/elga_ace`; a release
 ZIP asset is not required. Push the changed repository files before installing
 from GitHub, and include the root `hacs.json` in any new release tag.
+## Publishing updates
+
+Commit and push the repository files, including `hacs.json` and the integration
+manifest, to `wouterokkerse/remeha-bluetooth`. The integration stays in
+`custom_components/elga_ace`; keep `content_in_root` and `zip_release` disabled.
+The manually built ZIP is a `/config` bundle, not a HACS ZIP-release asset.
+
+For a versioned update, publish a GitHub release from the updated commit with a
+tag matching the integration manifest version, for example `v0.2.1`. The tagged
+tree must also include `hacs.json`. Users can install the default branch without
+a release. Adding a custom repository does not automatically list the integration
+in the public Marketplace/HACS catalog.

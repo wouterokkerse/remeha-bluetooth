@@ -23,7 +23,11 @@ class PairingError(ElgaError):
 
 
 class UnsupportedAdapter(ElgaError):
-    """A local BlueZ adapter is required for passkey pairing."""
+    """The selected Bluetooth transport cannot perform the required pairing."""
+
+
+class ProxyPairingRequired(UnsupportedAdapter):
+    """The ESPHome proxy needs the companion passkey helper installed."""
 
 
 class ProtocolError(ElgaError):

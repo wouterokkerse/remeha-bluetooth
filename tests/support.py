@@ -87,6 +87,7 @@ class FakeHass:
             async_reload=AsyncMock(),
             async_forward_entry_setups=AsyncMock(),
             async_unload_platforms=AsyncMock(return_value=True),
+            async_loaded_entries=lambda domain: [],
         )
 
     def async_create_task(self, coroutine):

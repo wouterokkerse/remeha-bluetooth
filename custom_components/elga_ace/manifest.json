@@ -1,6 +1,7 @@
 {
   "domain": "elga_ace",
   "name": "Remeha Elga Ace Bluetooth",
+  "after_dependencies": ["esphome"],
   "bluetooth": [
     {"local_name": "GTW*", "connectable": true},
     {"local_name": "EHC-*", "connectable": true}

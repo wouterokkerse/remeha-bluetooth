@@ -6,10 +6,10 @@ import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from functools import partial
 from time import monotonic
 
 from bleak.exc import BleakError
-from homeassistant.components import bluetooth
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ADDRESS, CONF_NAME, CONF_SCAN_INTERVAL
 from homeassistant.core import HomeAssistant
@@ -24,6 +24,7 @@ from .const import (
 )
 from .protocol import DeviceUnavailable, ElgaError, PairingError, RegisterReadError
 from .registers import Register
+from .transport import async_pair_gateway, connectable_device
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -90,6 +91,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
             await self.client.async_connect()
             deadline = monotonic() + POLL_BUDGET
             data = dict(self.data)
+            read_timeout = 5.0 if getattr(self.client, "is_remote", False) else REGISTER_TIMEOUT
             attempted = 0
             successful = 0
             for register in self._fast:
@@ -97,7 +99,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
                 if remaining <= 0:
                     break
                 attempted += 1
-                successful += await self._read(register, data, min(REGISTER_TIMEOUT, remaining))
+                successful += await self._read(register, data, min(read_timeout, remaining))
             visited = 0
             slow_reads = 0
             while self._slow and visited < len(self._slow) and slow_reads < self._batch_size:
@@ -113,7 +115,7 @@ class ElgaCoordinator(DataUpdateCoordinator[dict[str, Reading]]):
                     continue
                 attempted += 1
                 slow_reads += 1
-                successful += await self._read(register, data, min(REGISTER_TIMEOUT, remaining))
+                successful += await self._read(register, data, min(read_timeout, remaining))
             if not self.client.connected:
                 raise DeviceUnavailable("Gateway disconnected during polling")
             if attempted and not successful and not data:

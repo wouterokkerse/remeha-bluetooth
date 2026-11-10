@@ -7,7 +7,7 @@ import support
 
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import UpdateFailed
-from custom_components.elga_ace import binary_sensor, coordinator, diagnostics, sensor
+from custom_components.elga_ace import binary_sensor, coordinator, diagnostics, sensor, transport
 from custom_components.elga_ace.const import FAST_REGISTERS
 from custom_components.elga_ace.protocol import DeviceUnavailable, PairingError, RegisterReadError
 from custom_components.elga_ace.registers import INTEGER_LENGTHS, load_registers

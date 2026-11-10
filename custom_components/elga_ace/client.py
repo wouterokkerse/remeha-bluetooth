@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from contextlib import suppress
 from typing import Any
 
@@ -15,7 +15,7 @@ from .const import (
     CHAR_ERROR, CHAR_IDENTIFICATION_NOTIFY, CHAR_IDENTIFICATION_WRITE,
     CHAR_NOTIFY, CHAR_UNLOCK_NOTIFY, CHAR_UNLOCK_WRITE, CHAR_WRITE,
 )
-from .pairing import async_pair
+from .pairing import async_pair, connected_device, proxy_source
 from .protocol import (
     DeviceUnavailable, GatewayError, ProtocolError, Reassembler, RegisterReadError,
     ble_unlock_request, control_frame, identification_request, parse_challenge,
@@ -27,9 +27,14 @@ from .protocol import (
 class ElgaClient:
     """Expose authentication and reads only; there is no register-write API."""
 
-    def __init__(self, device_callback: Callable[[], BLEDevice | None], pin: str) -> None:
+    def __init__(
+        self, device_callback: Callable[[], BLEDevice | None], pin: str,
+        pair_callback: Callable[..., Awaitable[None]] | None = None,
+    ) -> None:
         self._device_callback = device_callback
         self._pin = pin
+        self._pair_callback = pair_callback
+        self.connection_source: str | None = None
         self._client: BleakClientWithServiceCache | None = None
         self._events: asyncio.Queue[tuple[str, bytes] | Exception] = asyncio.Queue()
         self._reassembler = Reassembler()
@@ -40,6 +45,10 @@ class ElgaClient:
     @property
     def connected(self) -> bool:
         return self._client is not None and self._client.is_connected and self._authorized
+
+    @property
+    def is_remote(self) -> bool:
+        return self.connection_source is not None
 
     def _disconnected(self, client: Any) -> None:
         if client is self._client:
@@ -118,22 +127,23 @@ class ElgaClient:
                 raise
 
     async def _authenticate(self) -> None:
+        timeout = 10 if self.is_remote else 5
         self._drain()
         await self._write(CHAR_IDENTIFICATION_WRITE, b"")
-        challenge = await self._response(CHAR_IDENTIFICATION_NOTIFY, lambda data: True, 5)
+        challenge = await self._response(CHAR_IDENTIFICATION_NOTIFY, lambda data: True, timeout)
         await self._write(CHAR_UNLOCK_WRITE, ble_unlock_request(challenge))
-        response = await self._response(CHAR_UNLOCK_NOTIFY, lambda data: True, 5)
+        response = await self._response(CHAR_UNLOCK_NOTIFY, lambda data: True, timeout)
         if response != b"\x01":
             raise ProtocolError("BLE unlock was rejected")
         for protocol_id, level in ((1, 4), (0, 5)):
             self._drain()
             await self._write(CHAR_WRITE, control_frame(identification_request(protocol_id)))
             prefix = bytes([1, 2, protocol_id, 0, 2, 1])
-            response = await self._response(CHAR_NOTIFY, lambda data: data.startswith(prefix), 5)
+            response = await self._response(CHAR_NOTIFY, lambda data: data.startswith(prefix), timeout)
             challenge = parse_challenge(response[1:], protocol_id)
             await self._write(CHAR_WRITE, control_frame(unlock_request(challenge, protocol_id, level)))
             prefix = bytes([1, 2, protocol_id, 0, 2, 3])
-            response = await self._response(CHAR_NOTIFY, lambda data: data.startswith(prefix), 5)
+            response = await self._response(CHAR_NOTIFY, lambda data: data.startswith(prefix), timeout)
             validate_unlock(response[1:], protocol_id, level)
 
     async def async_read(self, node: int, index: int, subindex: int, timeout: float = 2.0) -> bytes:
