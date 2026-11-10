@@ -24,10 +24,10 @@ esp32:
     type: esp-idf
 
 packages:
-  elga_pairing: github://wouterokkerse/remeha-bluetooth/esphome/elga-pairing-package.yaml@main
+  elga_pairing: github://wouterokkerse/remeha-bluetooth/esphome/elga-pairing-package.yaml@master
 
 dashboard_import:
-  package_import_url: github://wouterokkerse/remeha-bluetooth/esphome/elga-proxy.yaml@main
+  package_import_url: github://wouterokkerse/remeha-bluetooth/esphome/elga-proxy.yaml@master
   import_full_config: false
 
 logger:
